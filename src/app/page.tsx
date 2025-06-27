@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Calendar, FileText, LayoutDashboard, Quote, Search } from "lucide-react";
 import { KeyFeatureProps } from "@/types";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import Logo from "@/components/ui/Logo";
 
 const testimonials = [
   {
@@ -60,10 +61,10 @@ const HomePage = () => {
         </div>
       </header>
       <section className="max-w-7xl py-16 md:py-24 my-20">
-        <h2 className="text-4xl md:text-5xl font-semibold text-foreground text-center mb-4">
+        <h2 className="text-4xl font-bold text-foreground text-center mb-4">
           Unlock Your Potential with WorkBook
         </h2>
-        <p className="text-xl text-muted-foreground text-center max-w-2xl mx-auto mb-12 md:mb-20">
+        <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 md:mb-20">
           WorkBook provides powerful tools to streamline your workflow and keep everything in one place.
         </p>
 
@@ -90,10 +91,10 @@ const HomePage = () => {
           />
         </div>
       </section>
-      <section className="max-w-7xl py-16 md:py-24 my-20">
-        <div>
-          <h1>Achieve Yout Goals, Stress-Free</h1>
-          <p>WorkBook streamlines your digital life, turning chaos into clarity and helping you stay on top of everything that matters</p>
+      <section className="max-w-7xl py-16 md:py-24 mb-20">
+        <div className="space-y-2">
+          <h1 className="font-bold text-4xl">Achieve Your Goals, Stress-Free</h1>
+          <p className="text-xl mb-8 text-muted-foreground">WorkBook streamlines your digital life, turning chaos into clarity and helping you stay on top of everything that matters</p>
         </div>
         <div>
           <Carousel opts={{loop:true}}>
@@ -101,9 +102,9 @@ const HomePage = () => {
               {testimonials.map((testimonial) => (
                 <CarouselItem className="flex items-center gap-8 select-none">
                   <img src={testimonial.image} alt={"Images"} width={600} />
-                  <div className="space-y-2 text-xl">
-                    <Quote className="size-8 text-primary"/>
-                    <h1 className="text-3xl font-bold text-primary mt-5">{testimonial.name}</h1>
+                  <div className="space-y-2 text-lg">
+                    <Quote className="size-6 text-primary"/>
+                    <h1 className="text-2xl font-bold text-primary mt-5">{testimonial.name}</h1>
                     <h2 className="text-muted-foreground mb-4">{testimonial.title}</h2>
                     <p className="text-muted-foreground">{testimonial.quote}</p>
                   </div>
@@ -115,6 +116,26 @@ const HomePage = () => {
           </Carousel>
         </div>
       </section>
+      <section className="w-full bg-secondary">
+        <div className="max-w-6xl mx-auto py-16 md:py-24 my-20 space-y-6">
+          <h1 className="font-bold text-2xl">Ready to get started?</h1>
+          <p className="max-w-lg text-lg text-muted-foreground">Create an account instantly to get started or contact us to manage a custom workspace for your workbook.</p>
+          <span>
+            <Button size="lg" >Start Now</Button>
+          </span>
+        </div>
+      </section>
+      <footer className="w-full max-w-7xl my-8 flex justify-between">
+        <div className="space-y-1">
+          <Logo />
+          <span></span>
+          <h1 className="text-muted-foreground">© 2025 · Kenny Tang · All rights reserved </h1>
+        </div>
+        <div className="text-right space-y-1">
+          <h1>Created by <span className="font-bold underline hover:text-primary">Kenny Tang</span></h1>
+          <h1>Code / Design by <span className="font-bold underline hover:text-primary">Kenny Tang</span></h1>
+        </div>
+      </footer>
     </main>
   );
 }
@@ -126,7 +147,7 @@ const KeyFeature = ({headerText, description, IconComponent }: KeyFeatureProps) 
         <IconComponent className="text-primary" />
       </div>
       <h1 className="text-lg font-semibold mb-2">{headerText}</h1>
-      <p className="text-muted-foreground ">{description}</p>
+      <p className="text-muted-foreground">{description}</p>
     </Card>
   );
 }
