@@ -1,12 +1,14 @@
-import NavBar from "@/components/NavBar";
-import { Button } from "@/components/ui/button";
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
-import { Card } from "@/components/ui/card";
-import { BookOpen, Calendar, Clock, FileText, LayoutDashboard, LayoutPanelTop, Quote, Search, TrendingUp } from "lucide-react";
-import { KeyFeatureProps, TrustMetricsProps } from "@/types";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import NavBar from "@/components/NavBar";
 import Logo from "@/components/ui/Logo";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Calendar, Clock, FileText, LayoutDashboard, LayoutPanelTop, Quote, Search, TrendingUp } from "lucide-react";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { KeyFeatureProps, TrustMetricsProps } from "@/types";
+import { motion, Variants } from "framer-motion";
 
 const testimonials = [
   {
@@ -35,6 +37,39 @@ const testimonials = [
   }
 ];
 
+const titleAnimationVariants: Variants = {
+  hidden: { opacity: 0, y: 100 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut"
+    }
+  },
+};
+
+const staggerContainer : Variants = {
+  hidden: { opacity: 0 }, 
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.25,
+    },
+  },
+};
+
+const fadeUpChild: Variants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.3, ease: "easeOut" }
+  }
+};
+
+const featureItemVariants : Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
+
 const HomePage = () => {
   return (
     <main className="flex flex-col items-center justify-center">
@@ -60,15 +95,24 @@ const HomePage = () => {
           <Image src="hero_image.svg" alt={"Image"} width={500} height={500} />
         </div>
       </header>
-      <section className="max-w-7xl py-16 md:py-24 my-20">
-        <h2 className="text-4xl font-bold text-foreground text-center mb-4">
-          Unlock Your Potential with WorkBook
-        </h2>
-        <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 md:mb-20">
-          WorkBook provides powerful tools to streamline your workflow and keep everything in one place.
-        </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl py-16 md:py-24 my-20">
+        <motion.div 
+          variants={titleAnimationVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.5 }}
+        >
+          <h2 className="text-4xl font-bold text-foreground text-center mb-4">Unlock Your Potential with WorkBook</h2>
+          <p className="text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 md:mb-20">WorkBook provides powerful tools to streamline your workflow and keep everything in one place.</p>
+        </motion.div>
+        <motion.div 
+          variants={staggerContainer} 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-4 sm:px-6 lg:px-8"
+        >
           <KeyFeature 
             headerText={"Intuitive Notes & Page"} 
             description={" Capture ideas effortlessly with rich text editing, organized into custom folders and searchable pages."} 
@@ -89,20 +133,27 @@ const HomePage = () => {
             description={"Quickly find any note, event, or file across your entire workspace with powerful, instant search."} 
             IconComponent={Search}          
           />
-        </div>
+        </motion.div>
       </section>
-      <div className="bg-accent w-full">
-        <section className="max-w-7xl py-16 md:py-24">
-          <div className="space-y-2 text-center">
+
+      <motion.div 
+        className="bg-accent w-full"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+      >
+        <section className="max-w-7xl py-16 md:py-24 mx-auto">
+          <motion.div variants={fadeUpChild} className="space-y-2 text-center">
             <h1 className="font-bold text-4xl text-primary"> Testimonies</h1>
             <h1 className="max-w-xl text-lg text-muted-foreground mb-10 mx-auto">Discover how countless users are transforming their work and personal organization through our platform.</h1>
-          </div>
-          <div className="max-w-5xl mx-auto">
+          </motion.div>
+          <motion.div variants={fadeUpChild} className="max-w-5xl mx-auto">
             <Carousel opts={{loop:true}}>
               <CarouselContent>
-                {testimonials.map((testimonial) => (
-                  <CarouselItem className="flex flex-col sm:flex-row items-center gap-8 select-none">
-                    <img src={testimonial.image} alt={"Images"} className="max-w-lg"/>
+                {testimonials.map((testimonial, index) => (
+                  <CarouselItem key={index} className="flex flex-col sm:flex-row items-center gap-8 select-none">
+                    <img src={testimonial.image} alt={testimonial.name} className="max-w-lg"/>
                     <div className="space-y-2 lg:text-lg">
                       <Quote className="size-6 text-primary"/>
                       <h1 className="text-2xl font-bold text-primary mt-5">{testimonial.name}</h1>
@@ -115,32 +166,49 @@ const HomePage = () => {
               <CarouselPrevious className="text-primary"/>
               <CarouselNext className="text-primary"/>
             </Carousel>
-          </div>
+          </motion.div>
         </section>
-      </div>
-      <section className="max-w-5xl py-16 md:py-24 mb-20 w-full mx-auto">
-        <div className="flex items-center">
+      </motion.div>
+
+      <motion.section 
+        className="max-w-5xl py-16 md:py-24 mb-20 w-full mx-auto"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.5 }}
+      >
+        <motion.div variants={fadeUpChild} className="flex items-center">
           <span className="space-y-6 w-sm mb-20 mr-auto">
             <h1 className="font-bold text-primary">Trust Metrics</h1>
             <h1 className="font-bold text-3xl w-sm"> The ultimate foundation for your ideas and projects.</h1>
             <p className="text-lg font-medium text-muted-foreground">Your workspace hub transforms how you organize information, collaborate, and bring your visions to life, making productivity intuitive and effortless. Empowering individuals and teams worldwide, we constantly evolve to ensure your best work is always within reach.</p>
           </span>
-          <Image src="hero_image.svg" alt={"Image"} width={400} height={500}  />
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 ">
+          <Image src="hero_image.svg" alt={"Image"} width={400} height={500} />
+        </motion.div>
+        <motion.div 
+          variants={staggerContainer} 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10"
+        >
           <TrustMetrics numbers=" 25,000+" description="Pages & documents created daily." IconComponent={BookOpen}/>
           <TrustMetrics numbers="99.99%" description="Historical uptime for seamless work." IconComponent={Clock}/>
           <TrustMetrics numbers="85%" description="Of users report increased organization." IconComponent={TrendingUp}/>
           <TrustMetrics numbers="40+" description="Templates & integrations available." IconComponent={LayoutPanelTop}/>
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
+
       <section className="w-full bg-secondary">
-        <div className="max-w-6xl mx-auto py-16 md:py-24 my-20 space-y-6">
-          <h1 className="font-bold text-2xl">Ready to get started?</h1>
-          <p className="max-w-lg text-lg text-muted-foreground">Create an account instantly to get started or contact us to manage a custom workspace for your workbook.</p>
-          <span>
-            <Button size="lg" >Start Now</Button>
-          </span>
+        <div className="max-w-6xl mx-auto py-16 md:py-24 my-20 flex items-center">
+          <div className="space-y-6">
+            <h1 className="font-bold text-2xl">Ready to get started?</h1>
+            <p className="max-w-lg text-lg text-muted-foreground">Create an account instantly to get started or contact us to manage a custom workspace for your workbook.</p>
+            <span>
+              <Button size="lg"><Link href={"/register"}>Start Now</Link></Button>
+            </span>
+          </div>
+          <motion.div className="w-1/10 shadow-md bg-primary aspect-square rounded-lg mx-auto" 
+            animate={{scale: [1, 2, 2, 1], rotate: [0, 90, 90, 0], borderRadius: ["10%", "10%", "50%", "10%"]}}
+            transition={ {duration: 4, ease: "easeInOut", repeat: Infinity }}
+          />
         </div>
       </section>
       <footer className="w-full max-w-7xl px-8 my-8 flex justify-between mx-auto">
@@ -150,8 +218,12 @@ const HomePage = () => {
           <h1 className="text-muted-foreground">© 2025 · Kenny Tang · All rights reserved </h1>
         </div>
         <div className="text-right space-y-1">
-          <h1>Created by <span className="font-bold underline hover:text-primary">Kenny Tang</span></h1>
-          <h1>Code / Design by <span className="font-bold underline hover:text-primary">Kenny Tang</span></h1>
+          <h1>Created by <span className="font-bold underline hover:text-primary hover:cursor-pointer">
+            <a href="https://github.com/kennytangg" target="_blank" rel="noopener noreferrer">Kenny Tang</a></span>
+          </h1>
+          <h1>Code / Design by <span className="font-bold underline hover:text-primary hover:cursor-pointer">
+            <a href="https://github.com/kennytangg" target="_blank" rel="noopener noreferrer">Kenny Tang</a></span>
+          </h1>
         </div>
       </footer>
     </main>
@@ -160,19 +232,19 @@ const HomePage = () => {
 
 const KeyFeature = ({headerText, description, IconComponent }: KeyFeatureProps) => {
   return (
-    <Card className="p-6 md:p-8 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+    <motion.div variants={featureItemVariants} transition={{ duration: 0.5, ease: "easeInOut"}} className="p-6 md:p-8 rounded-lg border-1 shadow-lg hover:shadow-lg transition-shadow duration-300">
       <div className="flex items-center justify-center size-12 rounded-full bg-primary/15 mb-4">
         <IconComponent className="text-primary" />
       </div>
       <h1 className="text-lg font-semibold mb-2">{headerText}</h1>
       <p className="text-muted-foreground">{description}</p>
-    </Card>
+    </motion.div>
   );
 }
 
 const TrustMetrics = ({numbers, description, IconComponent}: TrustMetricsProps) => {
   return (
-    <div className="flex items-center">
+    <motion.div variants={fadeUpChild} className="flex items-center">
         <div className="hidden md:block border-l-4 border-primary h-16 mr-4 flex-shrink-0"></div>
         <div>
             <span className="flex items-center">
@@ -181,7 +253,7 @@ const TrustMetrics = ({numbers, description, IconComponent}: TrustMetricsProps) 
             </span>
             <p className="text-sm opacity-80 ">{description}</p>
         </div>
-    </div>
+    </motion.div>
   );
 }
 

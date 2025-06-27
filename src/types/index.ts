@@ -1,15 +1,15 @@
-export type ButtonProps = {
+export interface ButtonProps {
     text: string;
     onClick?: () => void;
 }
 
-export type KeyFeatureProps = {
+export interface KeyFeatureProps {
     headerText: string;
     description: string;
     IconComponent: React.ElementType;
 }
 
-export type TrustMetricsProps = {
+export interface TrustMetricsProps {
     numbers: string;
     description: string;
     IconComponent: React.ElementType;
