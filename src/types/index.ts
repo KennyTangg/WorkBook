@@ -8,3 +8,9 @@ export type KeyFeatureProps = {
     description: string;
     IconComponent: React.ElementType;
 }
+
+export type TrustMetricsProps = {
+    numbers: string;
+    description: string;
+    IconComponent: React.ElementType;
+}

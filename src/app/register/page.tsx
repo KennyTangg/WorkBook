@@ -11,18 +11,21 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Image from "next/image";
+import Link from "next/link";
 
 const RegisterPage = () => {
   return (
     <main className="min-h-screen max-w-6xl grid grid-cols-3 items-center mx-auto">
-        <Card className="w-full h-1/2 max-w-sm justify-center shadow-md">
+        <Card className="w-full h-7/12 max-w-sm justify-center shadow-md">
             <CardHeader>
-                <CardTitle className="text-xl">Login to your account</CardTitle>
+                <CardTitle className="text-xl">Create your account</CardTitle>
                 <CardDescription >
-                Enter your email below to login to your account
+                Fill in the information below to get started
                 </CardDescription>
                 <CardAction>
-                <Button variant="link" className="text-md">Sign Up</Button>
+                <Button variant="link" className="text-md">
+                    <Link href={"/login"}>Log In</Link>
+                </Button>
                 </CardAction>
             </CardHeader>
             <CardContent>
@@ -33,20 +36,18 @@ const RegisterPage = () => {
                     <Input
                         id="email"
                         type="email"
-                        placeholder="m@example.com"
+                        placeholder="you@example.com"
                         required
                     />
                     </div>
                     <div className="grid gap-4">
                     <div className="flex items-center">
                         <Label htmlFor="password" className="text-md" >Password</Label>
-                        <a
-                        href="#"
-                        className="text-sm ml-auto inline-block underline-offset-4 hover:underline"
-                        >
-                        Forgot your password?
-                        </a>
                     </div>
+                    <Input id="password" type="password" required />
+                    </div>
+                    <div className="grid gap-4">
+                    <Label htmlFor="email" className="text-md" >Confirm Password</Label>
                     <Input id="password" type="password" required />
                     </div>
                 </div>
@@ -54,7 +55,7 @@ const RegisterPage = () => {
             </CardContent>
             <CardFooter className="flex-col gap-4 mt-4">
                 <Button type="submit" className="w-full">
-                Login
+                Register
                 </Button>
                 <Button variant="outline" className="w-full">
                 Login with Google

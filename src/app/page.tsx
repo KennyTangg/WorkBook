@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import { Calendar, FileText, LayoutDashboard, Quote, Search } from "lucide-react";
-import { KeyFeatureProps } from "@/types";
+import { BookOpen, Calendar, Clock, FileText, LayoutDashboard, LayoutPanelTop, Quote, Search, TrendingUp } from "lucide-react";
+import { KeyFeatureProps, TrustMetricsProps } from "@/types";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import Logo from "@/components/ui/Logo";
 
@@ -91,29 +91,47 @@ const HomePage = () => {
           />
         </div>
       </section>
-      <section className="max-w-7xl py-16 md:py-24 mb-20">
-        <div className="space-y-2">
-          <h1 className="font-bold text-4xl">Achieve Your Goals, Stress-Free</h1>
-          <p className="text-xl mb-8 text-muted-foreground">WorkBook streamlines your digital life, turning chaos into clarity and helping you stay on top of everything that matters</p>
+      <div className="bg-accent w-full">
+        <section className="max-w-7xl py-16 md:py-24">
+          <div className="space-y-2 text-center">
+            <h1 className="font-bold text-4xl text-primary"> Testimonies</h1>
+            <h1 className="max-w-xl text-lg text-muted-foreground mb-10 mx-auto">Discover how countless users are transforming their work and personal organization through our platform.</h1>
+          </div>
+          <div className="max-w-5xl mx-auto">
+            <Carousel opts={{loop:true}}>
+              <CarouselContent>
+                {testimonials.map((testimonial) => (
+                  <CarouselItem className="flex flex-col sm:flex-row items-center gap-8 select-none">
+                    <img src={testimonial.image} alt={"Images"} className="max-w-lg"/>
+                    <div className="space-y-2 lg:text-lg">
+                      <Quote className="size-6 text-primary"/>
+                      <h1 className="text-2xl font-bold text-primary mt-5">{testimonial.name}</h1>
+                      <h2 className="text-muted-foreground mb-4">{testimonial.title}</h2>
+                      <p className="text-muted-foreground">{testimonial.quote}</p>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="text-primary"/>
+              <CarouselNext className="text-primary"/>
+            </Carousel>
+          </div>
+        </section>
+      </div>
+      <section className="max-w-5xl py-16 md:py-24 mb-20 w-full mx-auto">
+        <div className="flex items-center">
+          <span className="space-y-6 w-sm mb-20 mr-auto">
+            <h1 className="font-bold text-primary">Trust Metrics</h1>
+            <h1 className="font-bold text-3xl w-sm"> The ultimate foundation for your ideas and projects.</h1>
+            <p className="text-lg font-medium text-muted-foreground">Your workspace hub transforms how you organize information, collaborate, and bring your visions to life, making productivity intuitive and effortless. Empowering individuals and teams worldwide, we constantly evolve to ensure your best work is always within reach.</p>
+          </span>
+          <Image src="hero_image.svg" alt={"Image"} width={400} height={500}  />
         </div>
-        <div>
-          <Carousel opts={{loop:true}}>
-            <CarouselContent>
-              {testimonials.map((testimonial) => (
-                <CarouselItem className="flex items-center gap-8 select-none">
-                  <img src={testimonial.image} alt={"Images"} width={600} />
-                  <div className="space-y-2 text-lg">
-                    <Quote className="size-6 text-primary"/>
-                    <h1 className="text-2xl font-bold text-primary mt-5">{testimonial.name}</h1>
-                    <h2 className="text-muted-foreground mb-4">{testimonial.title}</h2>
-                    <p className="text-muted-foreground">{testimonial.quote}</p>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="text-primary"/>
-            <CarouselNext className="text-primary"/>
-          </Carousel>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 ">
+          <TrustMetrics numbers=" 25,000+" description="Pages & documents created daily." IconComponent={BookOpen}/>
+          <TrustMetrics numbers="99.99%" description="Historical uptime for seamless work." IconComponent={Clock}/>
+          <TrustMetrics numbers="85%" description="Of users report increased organization." IconComponent={TrendingUp}/>
+          <TrustMetrics numbers="40+" description="Templates & integrations available." IconComponent={LayoutPanelTop}/>
         </div>
       </section>
       <section className="w-full bg-secondary">
@@ -125,7 +143,7 @@ const HomePage = () => {
           </span>
         </div>
       </section>
-      <footer className="w-full max-w-7xl my-8 flex justify-between">
+      <footer className="w-full max-w-7xl px-8 my-8 flex justify-between mx-auto">
         <div className="space-y-1">
           <Logo />
           <span></span>
@@ -149,6 +167,21 @@ const KeyFeature = ({headerText, description, IconComponent }: KeyFeatureProps) 
       <h1 className="text-lg font-semibold mb-2">{headerText}</h1>
       <p className="text-muted-foreground">{description}</p>
     </Card>
+  );
+}
+
+const TrustMetrics = ({numbers, description, IconComponent}: TrustMetricsProps) => {
+  return (
+    <div className="flex items-center">
+        <div className="hidden md:block border-l-4 border-primary h-16 mr-4 flex-shrink-0"></div>
+        <div>
+            <span className="flex items-center">
+              <h3 className="text-2xl font-bold mb-1">{numbers}</h3>
+              <IconComponent className="size-5 ml-auto text-primary"></IconComponent>
+            </span>
+            <p className="text-sm opacity-80 ">{description}</p>
+        </div>
+    </div>
   );
 }
 
