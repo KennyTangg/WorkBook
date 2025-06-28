@@ -97,7 +97,7 @@ const HomePage = () => {
               </Link>
             </div>
           </section>
-          <Image src="hero_image.svg" alt={"Image"} width={500} height={500} />
+          <Image src="hero_image.svg" alt={"Image"} width={500} height={500} draggable="false" />
         </div>
       </header>
 
@@ -188,7 +188,7 @@ const HomePage = () => {
             <h1 className="font-bold text-3xl w-sm"> The ultimate foundation for your ideas and projects.</h1>
             <p className="text-lg font-medium text-muted-foreground">Your workspace hub transforms how you organize information, collaborate, and bring your visions to life, making productivity intuitive and effortless. Empowering individuals and teams worldwide, we constantly evolve to ensure your best work is always within reach.</p>
           </span>
-          <Image src="hero_image.svg" alt={"Image"} width={400} height={500} />
+          <Image src="hero_image.svg" alt={"Image"} width={400} height={500} draggable="false" />
         </motion.div>
         <motion.div 
           variants={staggerContainer} 
@@ -250,7 +250,7 @@ const KeyFeature = ({headerText, description, IconComponent }: KeyFeatureProps) 
 const TrustMetrics = ({numbers, description, IconComponent}: TrustMetricsProps) => {
   return (
     <motion.div variants={fadeUpChild} className="flex items-center">
-        <div className="hidden md:block border-l-4 border-primary h-16 mr-4 flex-shrink-0"></div>
+        <div className="border-l-3 border-primary h-16 mr-4"></div>
         <div>
             <span className="flex items-center">
               <h3 className="text-2xl font-bold mb-1">{numbers}</h3>
