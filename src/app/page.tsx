@@ -4,11 +4,13 @@ import Link from "next/link";
 import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import Logo from "@/components/ui/Logo";
+import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Calendar, Clock, FileText, LayoutDashboard, LayoutPanelTop, Quote, Search, TrendingUp } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { KeyFeatureProps, TrustMetricsProps } from "@/types";
 import { motion, Variants } from "framer-motion";
+import { useRef } from "react";
 
 const testimonials = [
   {
@@ -64,13 +66,16 @@ const fadeUpChild: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: "easeOut" }
+    transition: { duration: 0.5, ease: "easeOut" }
   }
 };
 
 const featureItemVariants : Variants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } };
 
 const HomePage = () => {
+  const plugin = useRef(
+    Autoplay({ delay: 4000, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
   return (
     <main className="flex flex-col items-center justify-center">
       <header className="w-full max-w-6xl">
@@ -149,7 +154,7 @@ const HomePage = () => {
             <h1 className="max-w-xl text-lg text-muted-foreground mb-10 mx-auto">Discover how countless users are transforming their work and personal organization through our platform.</h1>
           </motion.div>
           <motion.div variants={fadeUpChild} className="max-w-5xl mx-auto">
-            <Carousel opts={{loop:true}}>
+            <Carousel opts={{loop:true}} plugins={[plugin.current]}>
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
                   <CarouselItem key={index} className="flex flex-col sm:flex-row items-center gap-8 select-none">
