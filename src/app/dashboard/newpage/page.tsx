@@ -4,15 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { BlockComponentProps, BlockToDoComponentProps, HeadingBlock, ParagraphBlock, ToDoBlock } from "@/types";
+import { Block, BlockComponentProps, BlockToDoComponentProps, ToDoBlock  } from "@/types";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
- const NewPage = () => {
-    const [toggle, setToggle] = useState(false);
-    const handleToggle = () => {
-        return setToggle(!toggle);
-    }
+const initialBlocks: Block[] = [
+    { id: '1', type: 'heading', content: 'My Dynamic To-Do List' },
+    { id: '2', type: 'todo', content: 'Delete the old static JSX', checked: true },
+    { id: '3', type: 'todo', content: 'Render from an array instead', checked: false },
+    { id: '4', type: 'paragraph', content: 'This is much better!' },
+];
+
+const NewPage = () => {
+    const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
+    const handleToggleToDo = (id: string) => {
+        setBlocks(currentBlocks =>
+            currentBlocks.map(block => {
+                if (block.id === id && block.type === 'todo') {
+                    return { ...block, checked: !(block as ToDoBlock).checked };
+                }
+                return block;
+            })
+        );
+    };
     return (
         <>
             <header>
@@ -20,6 +34,24 @@ import { useState } from "react";
                 <hr className="mt-4 border-b-1 rounded-lg border-muted-foreground"/>
             </header>
             <section>
+                {blocks.map( (block) => {
+                    if (block.type == 'heading'){
+                        return <BlockHeading key={block.id} block={block} />
+                    } else if (block.type == 'paragraph'){
+                        return <BlockParagraph key={block.id} block={block} />;
+                    } else if (block.type == 'todo') {
+                        const todoBlock = block as ToDoBlock; 
+                        return (
+                            <BlockToDo
+                                key={todoBlock.id}
+                                block={block as ToDoBlock}
+                                onToggle={() => handleToggleToDo(todoBlock.id)}
+                            />
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
             </section>
             <Dialog>
                 <form>
