@@ -150,7 +150,7 @@ const HomePage = () => {
       >
         <section className="max-w-7xl py-16 md:py-24 mx-auto">
           <motion.div variants={fadeUpChild} className="space-y-2 text-center">
-            <h1 className="font-bold text-4xl text-primary"> Testimonies</h1>
+            <h1 className="font-bold text-4xl text-primary">Testimonies</h1>
             <h1 className="max-w-xl text-lg text-muted-foreground mb-10 mx-auto">Discover how countless users are transforming their work and personal organization through our platform.</h1>
           </motion.div>
           <motion.div variants={fadeUpChild} className="max-w-5xl mx-auto">

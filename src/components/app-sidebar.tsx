@@ -2,10 +2,6 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
   Frame,
   GalleryVerticalEnd,
   Home,
@@ -13,13 +9,10 @@ import {
   PieChart,
   Search,
   Settings,
-  Settings2,
   SquarePen,
-  SquareTerminal,
   Trash2,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
@@ -34,8 +27,6 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
 
 const data = {
   user: {
@@ -70,8 +61,6 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
-
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -81,14 +70,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild className="hover:cursor-pointer">
-                <a href={`${pathname}/search`}>
+              <SidebarMenuButton className="hover:cursor-pointer">
                   <Search />
                   <span>Search</span>
-                </a>
               </SidebarMenuButton>
               <SidebarMenuButton asChild className="hover:cursor-pointer">
-                <a href={`${pathname}/home`}>
+                <a href="/dashboard/home">
                   <Home />
                   <span>Home</span>
                 </a>
@@ -105,12 +92,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
               <SidebarMenuButton className="hover:cursor-pointer" tooltip="Manage your account and settings">
-                    <Settings />
-                    <span>Settings</span>
+                <Settings />
+                <span>Settings</span>
               </SidebarMenuButton>
               <SidebarMenuButton className="hover:cursor-pointer">
-                    <Trash2 />
-                    <span>Trash</span>
+                <Trash2 />
+                <span>Trash</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
         </SidebarMenu>
@@ -123,3 +110,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
+
+const SearchPopUp = () => {
+  return (
+    <>
+    </>
+  );
+}
+
+export default AppSidebar;
