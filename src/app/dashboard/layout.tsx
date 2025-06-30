@@ -5,7 +5,6 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
-import Logo from "@/components/ui/Logo"
 
 interface DashboardLayoutProps {
   children: ReactNode

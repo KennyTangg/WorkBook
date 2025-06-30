@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Block, BlockComponentProps, ToDoBlock  } from "@/types";
+import { Block, BlockComponentProps  } from "@/types";
 import { Plus } from "lucide-react";
 
 const initialBlocks: Block[] = [

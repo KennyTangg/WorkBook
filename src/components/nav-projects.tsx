@@ -2,13 +2,11 @@
 
 import {
   Folder,
-  Forward,
   MoreHorizontal,
   Plus,
   SquarePen,
   Star,
   Trash2,
-  type LucideIcon,
 } from "lucide-react"
 
 import {
