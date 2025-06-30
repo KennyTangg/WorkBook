@@ -31,16 +31,10 @@ export interface ParagraphBlock extends BaseBlock {
 
 export interface ToDoBlock extends BaseBlock {
     type: 'todo';
-    checked: boolean;
 }
 
 export type Block = HeadingBlock | ParagraphBlock | ToDoBlock;
 
 export interface BlockComponentProps {
   block: BaseBlock; 
-}
-
-export interface BlockToDoComponentProps {
-  block: ToDoBlock;
-  onToggle: (id: string) => void; 
 }
