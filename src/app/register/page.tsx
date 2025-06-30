@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -10,10 +12,40 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from 'next/navigation';
+import { useState } from "react";
+
 
 const RegisterPage = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const router = useRouter();
+
+    const signUp = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return;
+        }
+
+        const { data, error } = await supabase.auth.signUp({ email, password });
+
+        if (error) {
+            console.error(error.message);
+            alert(error.message);
+        } else if (data.session) {
+            console.log('Signed Up:', data);
+            router.push('/dashboard');
+        } else {
+            alert("Check your email for confirmation link!");
+        }
+    };
+    
   return (
     <main className="min-h-screen max-w-6xl grid grid-cols-3 items-center mx-auto">
         <Card className="w-full h-7/12 max-w-sm justify-center shadow-md">
@@ -29,36 +61,34 @@ const RegisterPage = () => {
                 </CardAction>
             </CardHeader>
             <CardContent>
-                <form>
-                <div className="flex flex-col gap-6">
-                    <div className="grid gap-4">
-                    <Label htmlFor="email" className="text-md" >Email</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        required
-                    />
+                <form onSubmit={signUp}>
+                    <div className="flex flex-col gap-6">
+                        <div className="grid gap-4">
+                        <Label htmlFor="email" className="text-md" >Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                        </div>
+                        <div className="grid gap-4">
+                            <Label htmlFor="password" className="text-md" >Password</Label>
+                            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                        </div>
+                        <div className="grid gap-4">
+                            <Label htmlFor="email" className="text-md" >Confirm Password</Label>
+                            <Input id="password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                        </div>
                     </div>
-                    <div className="grid gap-4">
-                    <div className="flex items-center">
-                        <Label htmlFor="password" className="text-md" >Password</Label>
-                    </div>
-                    <Input id="password" type="password" required />
-                    </div>
-                    <div className="grid gap-4">
-                    <Label htmlFor="email" className="text-md" >Confirm Password</Label>
-                    <Input id="password" type="password" required />
-                    </div>
-                </div>
+                    <Button type="submit" className="w-full mt-4"> Register </Button>
                 </form>
             </CardContent>
             <CardFooter className="flex-col gap-4 mt-4">
-                <Button type="submit" className="w-full">
-                Register
-                </Button>
                 <Button variant="outline" className="w-full">
-                Login with Google
+                    Login with Google
                 </Button>
             </CardFooter>
         </Card>
