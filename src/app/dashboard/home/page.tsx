@@ -13,7 +13,7 @@ const Homepage = () => {
                     />
                     <h1 className="font-bold text-base sm:text-2xl text-center text-muted-foreground">Welcome back</h1>
                 </div>
-                <div className="bg-muted rounded-lg aspect-square w-full h-full">
+                <div className="bg-muted rounded-lg aspect-square w-full h-56 mt-10">
 
                 </div>
             </section>
