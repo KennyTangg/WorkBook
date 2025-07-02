@@ -196,9 +196,9 @@ const HomePage = () => {
         viewport={{ once: true, amount: 0.5 }}
       >
         <motion.div variants={fadeUpChild} className="flex flex-col lg:flex-row gap-8 lg:gap-0 items-center">
-          <span className="space-y-6 px-6 sm:px-0 sm:w-sm mb-10 lg:mb-20 lg:mr-auto text-center lg:text-left">
+          <span className="space-y-6 px-4 sm:px-0 sm:w-sm mb-10 lg:mb-20 lg:mr-auto text-center lg:text-left">
             <h1 className="font-bold text-sm sm:text-base text-primary">Trust Metrics</h1>
-            <h1 className="font-bold text-xl sm:text-3xl sm:w-sm"> The ultimate foundation for your ideas and projects.</h1>
+            <h1 className="font-bold text-2xl sm:text-3xl sm:w-sm"> The ultimate foundation for your ideas and projects.</h1>
             <p className="text-sm sm:text-lg font-medium text-muted-foreground">Your workspace hub transforms how you organize information, collaborate, and bring your visions to life, making productivity intuitive and effortless. Empowering individuals and teams worldwide, we constantly evolve to ensure your best work is always within reach.</p>
           </span>
           <Image src="hero_image.svg" alt={"Image"} width={400} height={500} draggable="false" />

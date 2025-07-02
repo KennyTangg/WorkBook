@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Logo from "./ui/Logo";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./ui/mode-toggle";
@@ -8,8 +9,8 @@ const NavBar = () => {
             <Logo />
             <div className="flex gap-x-4">
                 <ModeToggle />
-                <Button variant="default" className="hidden sm:block" >Login</Button>
-                <Button variant="ghost" className="hidden sm:block">Sign Up</Button>
+                <Button variant="default" className="hidden sm:block"><Link href={"/login"}>Login</Link></Button>
+                <Button variant="ghost" className="hidden sm:block"><Link href={"/register"}>Sign Up</Link></Button>
             </div>
         </nav>
     );

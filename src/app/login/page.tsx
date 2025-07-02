@@ -17,6 +17,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
+import { FcGoogle } from 'react-icons/fc';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -35,6 +36,17 @@ const LoginPage = () => {
             alert("Check your email for confirmation link!");
         }
     }
+    const signInWithGoogle = async () => {
+        const { error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+            redirectTo: "/dashboard" 
+            }
+        })
+        if (error) {
+            console.error('OAuth sign in error:', error);
+        }
+    }
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
@@ -48,8 +60,8 @@ const LoginPage = () => {
                 />
             </div>
             <div className="w-full max-w-md mx-auto lg:mx-0">
-            <Card className="w-full h-auto lg:max-w-sm justify-center shadow-md">
-                <CardHeader>
+            <Card className="w-full h-auto lg:max-w-sm justify-center shadow-md bg-transparent border-0 sm:border sm:bg-card">
+                <CardHeader className="px-1 sm:px-6">
                     <CardTitle className="sm:text-xl">Login to your account</CardTitle>
                     <CardDescription >
                     Enter your email below to login to your account
@@ -60,9 +72,9 @@ const LoginPage = () => {
                     </Button>
                     </CardAction>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-1 sm:px-6">
                     <form onSubmit={signIn}>
-                        <div className="flex flex-col gap-4 sm:gap-6 mt-2 sm:mt-0">
+                        <div className="flex flex-col gap-4 sm:gap-6 mt-4 sm:mt-0">
                             <div className="grid gap-2 sm:gap-4">
                             <Label htmlFor="email" className="sm:text-md" >Email</Label>
                             <Input
@@ -87,15 +99,11 @@ const LoginPage = () => {
                             <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
                             </div>
                         </div>
-                        <Button type="submit" className="w-full mt-4">
-                            Login
-                        </Button>
+                        <Button type="submit" className="w-full mt-4"> Login </Button>
                     </form>
                 </CardContent>
-                <CardFooter className="mt-2">
-                    <Button variant="outline" className="w-full">
-                        Login with Google
-                    </Button>
+                <CardFooter className="mt-4 px-1 sm:px-6">
+                    <Button variant="outline" className="w-full" onClick={signInWithGoogle} ><FcGoogle className="size-4" /> Login with Google </Button>
                 </CardFooter>
             </Card>
             </div>
