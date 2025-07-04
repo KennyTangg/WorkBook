@@ -85,7 +85,7 @@ const HomePage = () => {
             <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight mb-4">
               Your Personal Workspace Hub
             </h2>
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8">
+            <p className="text-md sm:text-xl text-muted-foreground mb-8">
               Organize your thoughts, manage your schedule, and unleash your productivity.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -125,7 +125,7 @@ const HomePage = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 px-3 sm:px-0"
         >
           <KeyFeature 
             headerText={"Intuitive Notes & Page"} 
@@ -249,7 +249,7 @@ const HomePage = () => {
 
 const KeyFeature = ({headerText, description, IconComponent }: KeyFeatureProps) => {
   return (
-    <motion.div variants={featureItemVariants} transition={{ duration: 0.5, ease: "easeInOut"}} className="px-8 py-6 md:p-8 rounded-lg border-1 shadow-md hover:shadow-lg transition-shadow duration-300">
+    <motion.div variants={featureItemVariants} transition={{ duration: 0.5, ease: "easeInOut"}} className="px-10 py-8 md:p-8 rounded-lg border-1 shadow-md hover:shadow-lg transition-shadow duration-300">
       <div className="flex items-center justify-center size-10 sm:size-12 rounded-full bg-primary/15 mb-2 sm:mb-4">
         <IconComponent className="text-primary size-5 sm:size-6" />
       </div>

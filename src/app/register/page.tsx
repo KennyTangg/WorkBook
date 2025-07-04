@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import Logo from "@/components/ui/Logo";
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Link from "next/link";
@@ -62,8 +63,9 @@ const RegisterPage = () => {
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
             <div className="w-full max-w-md mx-auto lg:mx-0">
-                <Card className="w-full h-7/12 max-w-sm justify-center shadow-md bg-transparent border-0 sm:border sm:bg-card">
-                    <CardHeader className="px-1 sm:px-6">
+                <Logo className="relative bottom-10 text-center text-2xl hover:opacity-100"/>
+                <Card className=" w-full h-7/12 lg:max-w-sm justify-center shadow-md bg-transparent border-0 sm:border sm:bg-card">
+                    <CardHeader className="px-3 sm:px-6">
                         <CardTitle className="sm:text-xl">Create your account</CardTitle>
                         <CardDescription >
                         Fill in the information below to get started
@@ -74,11 +76,11 @@ const RegisterPage = () => {
                         </Button>
                         </CardAction>
                     </CardHeader>
-                    <CardContent className="px-1 sm:px-6">
+                    <CardContent className="px-3 sm:px-6">
                         <form onSubmit={signUp}>
                             <div className="flex flex-col gap-4 sm:gap-6 mt-4 sm:mt-0">
                                 <div className="grid gap-2 sm:gap-4">
-                                <Label htmlFor="email" className="sm:text-md" >Email</Label>
+                                <Label htmlFor="email" className="sm:text-md">Email</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -100,7 +102,7 @@ const RegisterPage = () => {
                             <Button type="submit" className="w-full mt-4"> Register </Button>
                         </form>
                     </CardContent>
-                    <CardFooter className="mt-4 px-1 sm:px-6">
+                    <CardFooter className="mt-4 px-3 sm:px-6">
                         <Button variant="outline" className="w-full" onClick={signInWithGoogle} ><FcGoogle className="size-4" /> Login with Google </Button>
                     </CardFooter>
                 </Card>
