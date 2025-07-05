@@ -19,6 +19,7 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 import Logo from "@/components/ui/Logo";
+import {signInWithGoogle} from "@/utils/actions";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -37,17 +38,12 @@ const LoginPage = () => {
             alert("Check your email for confirmation link!");
         }
     }
-    const signInWithGoogle = async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback` 
-            }
-        });
-        if (error) {
-            console.error('OAuth sign in error:', error);
+    const handleGoogleSignIn = async () => {
+        const url = await signInWithGoogle();
+        if (url) {
+            window.location.href = url;
         }
-    }
+    };
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <div className="w-full h-screen max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
@@ -105,7 +101,7 @@ const LoginPage = () => {
                         </form>
                     </CardContent>
                     <CardFooter className="mt-4 px-4 sm:px-6">
-                        <Button variant="outline" className="w-full" onClick={signInWithGoogle} ><FcGoogle className="size-4" /> Login with Google </Button>
+                        <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} ><FcGoogle className="size-4" /> Login with Google </Button>
                     </CardFooter>
                 </Card>
             </div>

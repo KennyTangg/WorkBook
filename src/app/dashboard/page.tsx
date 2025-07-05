@@ -1,15 +1,18 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { redirect } from "next/navigation";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from 'next/navigation'
 
-export default async function  Page() {
-  const supabase = createServerComponentClient({ cookies })
+export const dynamic = 'force-dynamic'; 
+
+export default async function Page() {
+  const supabase = createClient()
+
   const { data: { session } } = await supabase.auth.getSession()
+  console.log("Server-side Session:", session) 
 
-  if (!session) {
+  if(!session){
     redirect('/')
   }
 
