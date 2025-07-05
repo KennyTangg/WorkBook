@@ -51,9 +51,9 @@ const RegisterPage = () => {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
-            redirectTo: "/dashboard" 
+                redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback` 
             }
-        })
+        });
         if (error) {
             console.error('OAuth sign in error:', error);
         }
