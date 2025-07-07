@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
 
   const pathname = request.nextUrl.pathname;
-  const publicRoutes = ["/", "/login", "/register"];
+  const publicRoutes = ["/", "/login", "/register", "/auth/callback"];
   const isPublic = publicRoutes.includes(pathname);
 
   if (!session && !isPublic) {
@@ -44,6 +44,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|.*\\.jpg|.*\\.png|.*\\.svg|.*\\.webp|.*\\.jpeg).*)",
   ],
-};
+}
+

@@ -29,6 +29,11 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "./ui/button"
+import { useState } from "react"
+import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -39,7 +44,21 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter(); 
+  const handleSignOut = async () => {
+    setIsLoggingOut(true);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.error("Error signing out:", error.message);
+      setIsLoggingOut(false);
+      return;
+    }
+
+    router.push("/");
+  };
 
   return (
     <SidebarMenu>
@@ -102,12 +121,26 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
+            <DropdownMenuItem onClick={() => setLogoutDialogOpen(true)}>
+              <LogOut /> Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+          <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Log Out Confirmation</DialogTitle>
+                <DialogDescription> Are you sure you want to log out ?</DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button onClick={handleSignOut} type="button" disabled={isLoggingOut} >{isLoggingOut ? "Logging out..." : "Log Out"}</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
       </SidebarMenuItem>
     </SidebarMenu>
   )

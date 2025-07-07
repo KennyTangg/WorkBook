@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Logo from "@/components/ui/Logo";
 import { supabase } from "@/lib/supabaseClient";
+import { signInWithGoogle } from "@/utils/actions";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
@@ -47,17 +48,12 @@ const RegisterPage = () => {
             alert("Check your email for confirmation link!");
         }
     };
-    const signInWithGoogle = async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback` 
-            }
-        });
-        if (error) {
-            console.error('OAuth sign in error:', error);
+    const handleGoogleSignIn = async () => {
+        const url = await signInWithGoogle();
+        if (url) {
+            window.location.href = url;
         }
-    }
+    };
     
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -103,7 +99,7 @@ const RegisterPage = () => {
                         </form>
                     </CardContent>
                     <CardFooter className="mt-4 px-3 sm:px-6">
-                        <Button variant="outline" className="w-full" onClick={signInWithGoogle} ><FcGoogle className="size-4" /> Login with Google </Button>
+                        <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} ><FcGoogle className="size-4" /> Login with Google </Button>
                     </CardFooter>
                 </Card>
             </div>
