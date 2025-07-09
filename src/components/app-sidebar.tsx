@@ -1,47 +1,33 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  Frame,
-  GalleryVerticalEnd,
-  Home,
-  Map,
-  PieChart,
-  Search,
-  Settings,
-  SquarePen,
-  Trash2,
-} from "lucide-react"
+import * as React from "react";
+import { Frame, GalleryVerticalEnd, Home, Map, PieChart, Search, Settings, SquarePen, Trash2 } from "lucide-react";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
+import { TeamSwitcher } from "@/components/team-switcher";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
 
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarRail,
-} from "@/components/ui/sidebar"
-
-const data = {
+export function AppSidebar({
+  user,
+  ...props
+}: {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-  teams: [
+    id: string;
+    name: string;
+    email: string;
+    avatar: string | null;
+  };
+} & React.ComponentProps<typeof Sidebar>) {
+
+  const teams = [
     {
       name: "WorkBook Inc",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
-  ],
-  projects: [
+  ];
+
+  const projects = [
     {
       name: "Design Engineering",
       url: "#",
@@ -57,22 +43,20 @@ const data = {
       url: "#",
       icon: Map,
     },
-  ],
-}
+  ];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={teams} />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton className="hover:cursor-pointer">
-                  <Search />
-                  <span>Search</span>
+                <Search />
+                <span>Search</span>
               </SidebarMenuButton>
               <SidebarMenuButton asChild className="hover:cursor-pointer">
                 <a href="/dashboard/home">
@@ -81,16 +65,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </a>
               </SidebarMenuButton>
               <SidebarMenuButton className="hover:cursor-pointer">
-                    <SquarePen />
-                    <span>New Page</span>
+                <SquarePen />
+                <span>New Page</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={projects} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-        <SidebarMenu>
-          <SidebarMenuItem>
+          <SidebarMenu>
+            <SidebarMenuItem>
               <SidebarMenuButton className="hover:cursor-pointer" tooltip="Manage your account and settings">
                 <Settings />
                 <span>Settings</span>
@@ -100,15 +84,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span>Trash</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroup>
+          </SidebarMenu>
+        </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
 
 export default AppSidebar;
