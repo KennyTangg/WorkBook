@@ -6,42 +6,37 @@ import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { createNewPage } from "@/actions/create-page";
 
-export function AppSidebar({
-  user,
-  ...props
-}: {
+export function AppSidebar({ user, pages, ...props } : {
   user: {
     id: string;
     name: string;
     email: string;
     avatar: string | null;
   };
+    pages: {
+    id: string;
+    title: string | null;
+  }[]
 } & React.ComponentProps<typeof Sidebar>) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleNewPage = async () => {
+    startTransition(async () => {
+      const page = await createNewPage(user.id);
+      router.push(`/dashboard/pages/${page.id}`);
+    });
+  };
 
   const teams = [
     {
       name: "WorkBook Inc",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
-    },
-  ];
-
-  const projects = [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
     },
   ];
 
@@ -64,14 +59,18 @@ export function AppSidebar({
                   <span>Home</span>
                 </a>
               </SidebarMenuButton>
-              <SidebarMenuButton className="hover:cursor-pointer">
+              <SidebarMenuButton className="hover:cursor-pointer" onClick={handleNewPage} disabled={isPending}>
                 <SquarePen />
-                <span>New Page</span>
+                <span>{isPending ? "Creating..." : "New Page"}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <NavProjects projects={projects} />
+        <NavProjects projects={pages.map(page => ({
+            name: page.title || "Untitled",
+            url: `/dashboard/pages/${page.id}`,
+            icon: Frame
+          }))} />
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>

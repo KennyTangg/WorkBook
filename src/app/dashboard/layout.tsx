@@ -14,12 +14,13 @@ interface DashboardLayoutProps {
 
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const supabase = createClient();
-
   const { data: { user } } = await supabase.auth.getUser();
-
+  
   if (!user) {
     redirect("/");
   }
+
+  const { data: pages } = await supabase.from("pages").select("*").eq("user_id", user.id);
 
   let { data: profile, error } = await supabase
     .from("profiles")
@@ -58,7 +59,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
   return (
     <SidebarProvider>
-      <AppSidebar
+      <AppSidebar pages={pages || []}
         user={{
           id: user.id,
           name: profile.username,

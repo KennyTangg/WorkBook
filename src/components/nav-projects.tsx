@@ -1,35 +1,10 @@
 "use client"
 
-import {
-  Folder,
-  MoreHorizontal,
-  Plus,
-  SquarePen,
-  Star,
-  Trash2,
-} from "lucide-react"
+import { Folder, MoreHorizontal, Plus, SquarePen, Star, Trash2 } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
+import { SidebarGroup, SidebarGroupAction, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, useSidebar} from "@/components/ui/sidebar"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  SidebarGroup,
-  SidebarGroupAction,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar"
-
-export function NavProjects({
-  projects,
-}: {
+export function NavProjects({ projects }: {
   projects: {
     name: string
     url: string
