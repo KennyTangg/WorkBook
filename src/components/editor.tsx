@@ -6,7 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus } from "lucide-react";
+import { Check, Pencil, Plus } from "lucide-react";
 import { Block, BlockComponentProps, Page } from "@/types";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -14,6 +14,31 @@ type EditorProps = { page: Page; blocks: Block[] };
 
 export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleValue, setTitleValue] = useState(page.title || "Untitled");
+
+  const handleUpdateTitle = async () => {
+    const { error } = await supabase
+      .from("pages")
+      .update({ title: titleValue })
+      .eq("id", page.id);
+
+    if (error) {
+      console.error("Failed to update page title:", error);
+      return;
+    }
+
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleUpdateTitle();
+    } else if (e.key === "Escape") {
+      setIsEditingTitle(false);
+      setTitleValue(page.title || "Untitled");
+    }
+  };
 
   const addBlock = async (type: Block["type"]) => {
     const newBlock: Block = {
@@ -31,22 +56,57 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
     setBlocks((prev) => [...prev, newBlock]);
   };
 
+  const handleUpdate = async (blockId: string, newContent: string) => {
+    const { error } = await supabase
+      .from("blocks")
+      .update({ content: newContent })
+      .eq("id", blockId);
+
+    if (error) {
+      console.error("Failed to update block:", error);
+      return;
+    }
+
+    setBlocks((prev) =>
+      prev.map((block) =>
+        block.id === blockId ? { ...block, content: newContent } : block
+      )
+    );
+  };
+
   return (
     <>
-      <header>
-        <h1 className="font-bold text-3xl">{page.title || "Untitled"}</h1>
-        <hr className="mt-4 border-b-1 rounded-lg border-muted-foreground" />
+      <header className="flex items-center gap-2 group">
+          {isEditingTitle ? (
+            <>
+              <input
+                className="font-bold text-3xl bg-transparent border-b outline-none"
+                value={titleValue}
+                onChange={(e) => setTitleValue(e.target.value)}
+                onKeyDown={handleTitleKeyDown}
+                autoFocus
+              />
+              <Check className="size-6 ml-2 cursor-pointer" onClick={handleUpdateTitle} />
+            </>
+          ) : (
+            <>
+              <h1 className="font-bold text-3xl"> {titleValue || "Untitled"} </h1>
+              <Pencil className="size-5 ml-2 opacity-0 group-hover:opacity-50 hover:opacity-80 transition-all cursor-pointer" onClick={() => setIsEditingTitle(true)} />
+            </>
+          )}
       </header>
+      <hr className="mt-4 border-b-1 rounded-lg border-muted-foreground" />
 
       <section>
         {blocks.map((block) => {
+          const commonProps = { block, onUpdate: handleUpdate };
           switch (block.type) {
             case "heading":
-              return <BlockHeading key={block.id} block={block} />;
+              return <BlockHeading key={block.id} {...commonProps} />;
             case "paragraph":
-              return <BlockParagraph key={block.id} block={block} />;
+              return <BlockParagraph key={block.id} {...commonProps} />;
             case "todo":
-              return <BlockToDo key={block.id} block={block} />;
+              return <BlockToDo key={block.id} {...commonProps} />;
             default:
               return null;
           }
@@ -89,20 +149,129 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   );
 }
 
-const BlockToDo = ({ block }: BlockComponentProps) => (
-  <div className="flex items-center space-x-2 my-1.5">
-    <Checkbox id={block.id} />
-    <Label htmlFor={block.id}>{block.content}</Label>
-  </div>
-);
+const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(block.content);
+  
+  const handleSave = async () => {
+    await onUpdate(block.id, value);
+    setIsEditing(false);
+  };
 
-const BlockHeading = ({ block }: BlockComponentProps) => (
-  <div className="flex items-center gap-2 my-2 p-2 rounded-lg hover:bg-accent">
-    <div className="border-l-2 border-ring h-6" />
-    <h1 className="font-medium text-xl">{block.content}</h1>
-  </div>
-);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSave();
+    } else if (e.key === "Escape") {
+      setIsEditing(false);
+      setValue(block.content);
+    }
+  };
+  
+  return (
+    <div className="flex items-center gap-4 group">
+      <div className="flex items-center space-x-2 my-1.5">
+        <Checkbox id={block.id} />
+        {isEditing ? (
+          <>
+            <input
+              className="font-medium text-sm bg-transparent border-b outline-none"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              autoFocus
+            />
+            <Check className="size-5 ml-2 cursor-pointer" onClick={handleSave} />
+          </>
+        ) : (
+          <>
+            <Label htmlFor={block.id}>{block.content}</Label>
+            <Pencil className="size-4 ml-2 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+          </>  
+        )}
+      </div>
+    </div>
+  );
+};
 
-const BlockParagraph = ({ block }: BlockComponentProps) => (
-  <p className="px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
-);
+const BlockHeading = ({ block, onUpdate }: BlockComponentProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(block.content);
+
+  const handleSave = async () => {
+    await onUpdate(block.id, value);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSave();
+    } else if (e.key === "Escape") {
+      setIsEditing(false);
+      setValue(block.content);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2 my-2 p-2 rounded-lg group">
+      <div className="border-l-2 border-ring h-6" />
+      {isEditing ? (
+        <>
+          <input
+            className="font-medium text-xl bg-transparent border-b outline-none"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
+          <Check className="size-5 ml-2 cursor-pointer" onClick={handleSave} />
+        </>
+      ) : (
+        <>
+          <h1 className="font-medium text-xl">{block.content}</h1>
+          <Pencil className="size-4 ml-2 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+        </>
+      )}
+    </div>
+  );
+};
+
+const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [value, setValue] = useState(block.content);
+
+  const handleSave = async () => {
+    await onUpdate(block.id, value);
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSave();
+    } else if (e.key === "Escape") {
+      setIsEditing(false);
+      setValue(block.content);
+    }
+  };
+
+  return (
+    <div className="flex items-center my-2 group">
+      {isEditing ? (
+        <>
+          <input
+            className="font-medium px-2 py-1 bg-transparent border-b outline-none"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
+          <Check className="size-5 ml-2 cursor-pointer" onClick={handleSave} />
+        </>
+      ) : (
+        <>
+          <p className="px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
+          <Pencil className="size-4 ml-2 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+        </>
+      )}
+    </div>
+  );
+};

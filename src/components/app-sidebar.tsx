@@ -67,6 +67,7 @@ export function AppSidebar({ user, pages, ...props } : {
           </SidebarMenu>
         </SidebarGroup>
         <NavProjects projects={pages.map(page => ({
+            id: page.id,
             name: page.title || "Untitled",
             url: `/dashboard/pages/${page.id}`,
             icon: Frame

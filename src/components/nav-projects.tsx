@@ -6,6 +6,7 @@ import { SidebarGroup, SidebarGroupAction, SidebarGroupLabel, SidebarMenu, Sideb
 
 export function NavProjects({ projects }: {
   projects: {
+    id: string
     name: string
     url: string
   }[]
@@ -19,11 +20,11 @@ export function NavProjects({ projects }: {
         <Plus className="hover:cursor-pointer"/> <span className="sr-only">Add New Pages</span>
       </SidebarGroupAction>
       <SidebarMenu>
-        {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
+        {projects.map((project) => (
+          <SidebarMenuItem key={project.id}>
             <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <span>{item.name}</span>
+              <a href={project.url}>
+                <span>{project.name}</span>
               </a>
             </SidebarMenuButton>
             <DropdownMenu>

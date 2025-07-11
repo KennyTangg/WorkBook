@@ -39,6 +39,7 @@ export type Block = HeadingBlock | ParagraphBlock | ToDoBlock;
 
 export interface BlockComponentProps {
   block: Block;
+  onUpdate: (blockId: string, newContent: string) => void;
 }
 
 export interface Page {
