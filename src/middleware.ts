@@ -24,12 +24,21 @@ export async function middleware(request: NextRequest) {
       },
     }
   );
-
+  
   const { data: { session } } = await supabase.auth.getSession();
-
   const pathname = request.nextUrl.pathname;
   const publicRoutes = ["/", "/login", "/register", "/auth/callback"];
   const isPublic = publicRoutes.includes(pathname);
+
+  if (!session && request.cookies.has("sb:token")) {
+    console.log("Clearing cookies...");
+    const response = NextResponse.redirect(new URL("/login", request.url));
+
+    response.cookies.set("sb:token", "", { expires: new Date(0) });
+    response.cookies.set("sb:refresh_token", "", { expires: new Date(0) });
+
+    return response;
+  }
 
   if (!session && !isPublic) {
     return NextResponse.redirect(new URL("/login", request.url));
