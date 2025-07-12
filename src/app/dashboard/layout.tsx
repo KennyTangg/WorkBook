@@ -1,12 +1,10 @@
 import { ReactNode } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+
+export const dynamic = 'force-dynamic';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -15,18 +13,23 @@ interface DashboardLayoutProps {
 export default async function DashboardLayout({ children }: DashboardLayoutProps) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  
+
   if (!user) {
     redirect("/");
   }
 
-  const { data: pages } = await supabase.from("pages").select("*").eq("user_id", user.id);
+  const { data: pages } = await supabase
+    .from("pages")
+    .select("*")
+    .eq("user_id", user.id);
 
-  let { data: profile, error } = await supabase
+  const { data: profileData, error } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
+
+  let profile = profileData;
 
   if (error && error.code === "PGRST116") {
     const defaultProfile = {
@@ -59,12 +62,13 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
 
   return (
     <SidebarProvider>
-      <AppSidebar pages={pages || []}
+      <AppSidebar
+        pages={pages || []}
         user={{
           id: user.id,
-          name: profile.username,
-          email: profile.email,
-          avatar: profile.avatar_url || "/default-avatar.png",
+          name: profile?.username,
+          email: profile?.email,
+          avatar: profile?.avatar_url || "/default-avatar.png",
         }}
       />
       <SidebarInset>

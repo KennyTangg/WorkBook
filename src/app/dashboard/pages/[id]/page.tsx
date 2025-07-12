@@ -1,10 +1,9 @@
-// /app/dashboard/pages/[id]/page.tsx
 import { supabase } from "@/lib/supabaseClient";
 import Editor from "@/components/editor";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params } : { params: { id: string } }) {
-  const { id } = await params;
+export default async function Page({ params }: { params: { id: string } }) {
+  const { id } = params;
 
   const { data: page } = await supabase
     .from("pages")
