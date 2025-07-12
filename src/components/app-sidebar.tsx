@@ -5,7 +5,7 @@ import { Frame, GalleryVerticalEnd, Home, Search, Settings, SquarePen, Trash2 } 
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail } from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { createNewPage } from "@/actions/create-page";
@@ -66,7 +66,7 @@ export function AppSidebar({ user, pages, ...props } : {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        <NavProjects projects={pages.map(page => ({
+        <NavProjects userId={user.id} projects={pages.map(page => ({
             id: page.id,
             name: page.title || "Untitled",
             url: `/dashboard/pages/${page.id}`,
@@ -91,8 +91,6 @@ export function AppSidebar({ user, pages, ...props } : {
       <SidebarFooter>
         <NavUser user={user} />
       </SidebarFooter>
-
-      <SidebarRail />
     </Sidebar>
   );
 }

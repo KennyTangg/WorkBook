@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Check, Pencil, Plus } from "lucide-react";
 import { Block, BlockComponentProps, Page } from "@/types";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 
 type EditorProps = { page: Page; blocks: Block[] };
 
@@ -16,6 +17,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState(page.title || "Untitled");
+  const router = useRouter();
 
   const handleUpdateTitle = async () => {
     const { error } = await supabase
@@ -28,6 +30,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
       return;
     }
 
+    router.refresh();
     setIsEditingTitle(false);
   };
 
@@ -75,7 +78,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   };
 
   return (
-    <>
+    <main className="px-12 sm:px-8 xl:px-2">
       <header className="flex items-center gap-2 group">
           {isEditingTitle ? (
             <>
@@ -115,8 +118,8 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
 
       <Dialog>
         <DialogTrigger asChild>
-          <button className="flex items-center gap-2 py-1 px-4 my-4 border-muted-foreground border-2 rounded-lg transition-all hover:cursor-pointer hover:opacity-85">
-            <h6 className="text-sm font-medium">Add Blocks</h6>
+          <button className="flex items-center gap-2 py-1 px-4 my-4 border-muted-foreground border-1 rounded-lg transition-all hover:cursor-pointer hover:opacity-85">
+            <h6 className="text-sm">Add Blocks</h6>
             <Plus className="size-4" />
           </button>
         </DialogTrigger>
@@ -145,7 +148,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </main>
   );
 }
 
@@ -169,7 +172,7 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
   
   return (
     <div className="flex items-center gap-4 group">
-      <div className="flex items-center space-x-2 my-1.5">
+      <div className="flex items-center space-x-2.5 my-1.5">
         <Checkbox id={block.id} />
         {isEditing ? (
           <>
@@ -180,12 +183,12 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
               onKeyDown={handleKeyDown}
               autoFocus
             />
-            <Check className="size-5 ml-2 cursor-pointer" onClick={handleSave} />
+            <Check className="size-5 ml-4 cursor-pointer" onClick={handleSave} />
           </>
         ) : (
           <>
             <Label htmlFor={block.id}>{block.content}</Label>
-            <Pencil className="size-4 ml-2 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+            <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
           </>  
         )}
       </div>
@@ -223,12 +226,12 @@ const BlockHeading = ({ block, onUpdate }: BlockComponentProps) => {
             onKeyDown={handleKeyDown}
             autoFocus
           />
-          <Check className="size-5 ml-2 cursor-pointer" onClick={handleSave} />
+          <Check className="size-5 ml-4 cursor-pointer" onClick={handleSave} />
         </>
       ) : (
         <>
           <h1 className="font-medium text-xl">{block.content}</h1>
-          <Pencil className="size-4 ml-2 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+          <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
         </>
       )}
     </div>
@@ -264,12 +267,12 @@ const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
             onKeyDown={handleKeyDown}
             autoFocus
           />
-          <Check className="size-5 ml-2 cursor-pointer" onClick={handleSave} />
+          <Check className="size-5 ml-4 cursor-pointer" onClick={handleSave} />
         </>
       ) : (
         <>
           <p className="px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
-          <Pencil className="size-4 ml-2 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+          <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
         </>
       )}
     </div>

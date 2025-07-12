@@ -3,7 +3,7 @@ import Editor from "@/components/editor";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = params;
+  const { id } = await params;
 
   const { data: page } = await supabase
     .from("pages")

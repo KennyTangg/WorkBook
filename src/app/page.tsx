@@ -78,7 +78,7 @@ const HomePage = () => {
   );
   return (
     <main className="flex flex-col items-center justify-center">
-      <header className="w-full max-w-6xl px-6 sm:px-8">
+      <header className="w-full max-w-5xl lg:max-w-7xl px-6 sm:px-8">
         <NavBar />
         <div className="flex flex-col lg:flex-row justify-between items-center gap-8 lg:gap-0">
           <section className="flex flex-col w-full max-w-lg my-10 text-center lg:text-left">
@@ -162,7 +162,7 @@ const HomePage = () => {
             <h1 className="font-bold text-3xl sm:text-4xl text-primary">Testimonies</h1>
             <h1 className="max-w-xl text-base sm:text-lg text-muted-foreground mb-10 mx-auto">Discover how countless users are transforming their work and personal organization through our platform.</h1>
           </motion.div>
-          <motion.div variants={fadeUpChild} className="max-w-5xl ml-5 lg:mx-auto">
+          <motion.div variants={fadeUpChild} className="max-w-5xl lg:max-w-11/12 ml-5 lg:mx-auto">
             <Carousel opts={{loop:true}} plugins={[plugin.current]}>
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
@@ -253,7 +253,7 @@ const KeyFeature = ({headerText, description, IconComponent }: KeyFeatureProps) 
       <div className="flex items-center justify-center size-10 sm:size-12 rounded-full bg-primary/15 mb-2 sm:mb-4">
         <IconComponent className="text-primary size-5 sm:size-6" />
       </div>
-      <h1 className="text-base sm:text-lg font-semibold mb-2">{headerText}</h1>
+      <h1 className="text-base sm:text-lg  font-semibold mb-2">{headerText}</h1>
       <p className="text-muted-foreground text-sm sm:text-base">{description}</p>
     </motion.div>
   );

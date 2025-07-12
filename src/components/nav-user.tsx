@@ -125,6 +125,7 @@ export function NavUser({ user }: {
               <Button
                 onClick={handleSignOut}
                 type="button"
+                variant="destructive"
                 disabled={isLoggingOut}
               >
                 {isLoggingOut ? "Logging out..." : "Log Out"}
