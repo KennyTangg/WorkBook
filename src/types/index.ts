@@ -21,6 +21,7 @@ export interface BaseBlock {
   type: 'heading' | 'paragraph' | 'todo';
   content: string;
   created_at?: string;
+  position: number;
 }
 
 export interface HeadingBlock extends BaseBlock {
@@ -40,6 +41,7 @@ export type Block = HeadingBlock | ParagraphBlock | ToDoBlock;
 export interface BlockComponentProps {
   block: Block;
   onUpdate: (blockId: string, newContent: string) => void;
+  onDelete: (id: string) => void;
 }
 
 export interface Page {
@@ -47,4 +49,22 @@ export interface Page {
   title: string;
   user_id: string;
   created_at?: string;
+}
+
+export interface HomePage extends Page {
+  updated_at: string;
+}
+
+export interface SupabaseUser {
+  id: string;
+  email: string | null;
+  user_metadata?: {
+    username?: string;
+    full_name?: string;
+  };
+}
+
+export interface UserProfile {
+  id: string;
+  username?: string;
 }

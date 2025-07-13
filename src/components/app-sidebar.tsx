@@ -9,6 +9,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, Si
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { createNewPage } from "@/actions/create-page";
+import { comingSoon } from "@/utils/helpers";
 
 export function AppSidebar({ user, pages, ...props } : {
   user: {
@@ -49,7 +50,7 @@ export function AppSidebar({ user, pages, ...props } : {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="hover:cursor-pointer">
+              <SidebarMenuButton onClick={comingSoon} className="hover:cursor-pointer">
                 <Search />
                 <span>Search</span>
               </SidebarMenuButton>

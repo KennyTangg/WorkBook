@@ -6,10 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check, Pencil, Plus } from "lucide-react";
+import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { Block, BlockComponentProps, Page } from "@/types";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 
 type EditorProps = { page: Page; blocks: Block[] };
 
@@ -17,6 +18,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState(page.title || "Untitled");
+  const [isReordering, setIsReordering] = useState(false);
   const router = useRouter();
 
   const handleUpdateTitle = async () => {
@@ -34,6 +36,20 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
     setIsEditingTitle(false);
   };
 
+  const handleDelete = async (blockId: string) => {
+    const {error} = await supabase
+      .from("blocks")
+      .delete()
+      .eq("id", blockId);
+    
+      if (error) {
+        console.error(error);
+        return;
+      }
+      
+      setBlocks((prev) => prev.filter((block) => block.id !== blockId));
+  }
+
   const handleTitleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleUpdateTitle();
@@ -49,6 +65,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
       page_id: page.id,
       type,
       content: "New " + type,
+      position: blocks.length,
     };
     const { error } = await supabase.from("blocks").insert(newBlock);
     if (error) {
@@ -77,6 +94,32 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
     );
   };
 
+   const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) return;
+
+    const reordered = Array.from(blocks);
+    const [moved] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, moved);
+
+    const updatedBlocks = reordered.map((block, index) => ({
+      ...block,
+      position: index,
+    }));
+
+    setBlocks(updatedBlocks);
+
+    const updates = updatedBlocks.map(({ id, position }) => ({ id, position }));
+
+    const { error } = await supabase.from("blocks").upsert(updates);
+    if (error) {
+      console.error("Reorder error:", error);
+    } else {
+      console.log("Reorder success!");
+    }
+
+    router.refresh();
+  };
+  
   return (
     <main className="px-8 sm:px-6 xl:px-2">
       <header className="flex items-center gap-2 group">
@@ -99,60 +142,96 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
           )}
       </header>
       <hr className="mt-4 border-b-1 rounded-lg border-muted-foreground" />
+      
+      {isReordering ? (
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="blocks">
+            {(provided) => (
+              <section ref={provided.innerRef} {...provided.droppableProps}>
+                {blocks.map((block, index) => {
+                  const commonProps = { block, onUpdate: handleUpdate, onDelete: handleDelete };
 
-      <section>
-        {blocks.map((block) => {
-          const commonProps = { block, onUpdate: handleUpdate };
-          switch (block.type) {
-            case "heading":
-              return <BlockHeading key={block.id} {...commonProps} />;
-            case "paragraph":
-              return <BlockParagraph key={block.id} {...commonProps} />;
-            case "todo":
-              return <BlockToDo key={block.id} {...commonProps} />;
-            default:
-              return null;
-          }
-        })}
-      </section>
+                  return (
+                    <Draggable key={block.id} draggableId={block.id} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="px-2 my-2 border-1 rounded"
+                        >
+                          {block.type === "heading" && <BlockHeading {...commonProps} />}
+                          {block.type === "paragraph" && <BlockParagraph {...commonProps} />}
+                          {block.type === "todo" && <BlockToDo {...commonProps} />}
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </section>
+            )}
+          </Droppable>
+        </DragDropContext>
+      ) : (
+        <section>
+          {blocks.map((block) => {
+            const commonProps = { block, onUpdate: handleUpdate, onDelete: handleDelete };
 
-      <Dialog>
-        <DialogTrigger asChild>
-          <button className="flex items-center gap-2 py-1 px-4 my-4 border-muted-foreground border-1 rounded-lg transition-all hover:cursor-pointer hover:opacity-85">
-            <h6 className="text-sm">Add Blocks</h6>
-            <Plus className="size-4" />
-          </button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader className="text-left">
-            <DialogTitle>Add Blocks</DialogTitle>
-            <DialogDescription>Pick a block to create</DialogDescription>
-          </DialogHeader>
-          <Select onValueChange={addBlock}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select a Block" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Blocks</SelectLabel>
-                <SelectItem value="heading">Heading</SelectItem>
-                <SelectItem value="paragraph">Paragraph</SelectItem>
-                <SelectItem value="todo">To Do</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            return (
+              <div key={block.id}>
+                {block.type === "heading" && <BlockHeading {...commonProps} />}
+                {block.type === "paragraph" && <BlockParagraph {...commonProps} />}
+                {block.type === "todo" && <BlockToDo {...commonProps} />}
+              </div>
+            );
+          })}
+        </section>
+      )}
+
+      <div className="flex justify-end gap-2 mt-4">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>
+              <h6 className="text-sm">Add Blocks</h6>
+              <Plus className="size-4" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader className="text-left">
+              <DialogTitle>Add Blocks</DialogTitle>
+              <DialogDescription>Pick a block to create</DialogDescription>
+            </DialogHeader>
+            <Select onValueChange={addBlock}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select a Block" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Blocks</SelectLabel>
+                  <SelectItem value="heading">Heading</SelectItem>
+                  <SelectItem value="paragraph">Paragraph</SelectItem>
+                  <SelectItem value="todo">To Do</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        <Button variant="outline" onClick={() => setIsReordering(!isReordering)} >
+          {isReordering ? "Stop Reordering" : "Reorder Blocks"}
+        </Button>
+      </div>
     </main>
   );
 }
 
-const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
+const BlockToDo = ({ block, onUpdate, onDelete }: BlockComponentProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(block.content);
   
@@ -172,7 +251,7 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
   
   return (
     <div className="flex items-center gap-4 group">
-      <div className="flex items-center space-x-2.5 my-1.5">
+      <div className="flex items-center space-x-2.5 my-1">
         <Checkbox id={block.id} />
         {isEditing ? (
           <>
@@ -189,6 +268,7 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
           <>
             <Label className="text-sm sm:text-base font-normal" htmlFor={block.id}>{block.content}</Label>
             <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+            <Trash2 className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)}/>
           </>  
         )}
       </div>
@@ -196,7 +276,7 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
   );
 };
 
-const BlockHeading = ({ block, onUpdate }: BlockComponentProps) => {
+const BlockHeading = ({ block, onUpdate, onDelete }: BlockComponentProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(block.content);
 
@@ -232,13 +312,14 @@ const BlockHeading = ({ block, onUpdate }: BlockComponentProps) => {
         <>
           <h1 className="font-medium text-lg sm:text-xl">{block.content}</h1>
           <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+          <Trash2 className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)}/>
         </>
       )}
     </div>
   );
 };
 
-const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
+const BlockParagraph = ({ block, onUpdate, onDelete }: BlockComponentProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(block.content);
 
@@ -257,7 +338,7 @@ const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
   };
 
   return (
-    <div className="flex items-center my-2 group">
+    <div className="flex items-center my-1 group">
       {isEditing ? (
         <>
           <input
@@ -273,6 +354,7 @@ const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
         <>
           <p className="sm:text-lg px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
           <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+          <Trash2 className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)}/>
         </>
       )}
     </div>

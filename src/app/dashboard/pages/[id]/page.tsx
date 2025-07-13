@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     .from("blocks")
     .select("*")
     .eq("page_id", id)
-    .order("created_at");
+    .order("position");
 
   return <Editor page={page} blocks={blocks || []} />;
 }

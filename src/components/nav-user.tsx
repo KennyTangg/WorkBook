@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { comingSoon } from "@/utils/helpers";
 
 export function NavUser({ user }: {
   user: {
@@ -84,26 +85,25 @@ export function NavUser({ user }: {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={comingSoon}>
                 <Sparkles />
                 Upgrade to Pro
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem  onClick={comingSoon}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem  onClick={comingSoon}>
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem  onClick={comingSoon}>
                 <Bell />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
-
             <DropdownMenuItem onClick={() => setLogoutDialogOpen(true)}>
               <LogOut /> Log out
             </DropdownMenuItem>
