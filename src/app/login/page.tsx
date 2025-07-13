@@ -1,11 +1,7 @@
 'use client';
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
+import { Card, CardAction, CardContent,  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -20,22 +16,24 @@ import { useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
 import Logo from "@/components/ui/Logo";
 import {signInWithGoogle} from "@/utils/actions";
+import { useAuthToast } from "@/utils/helpers";
+import { ArrowLeft } from "lucide-react";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
-
+ const { error: showError, success: showSuccess, info: showInfo } = useAuthToast();
     const signIn = async (e: React.FormEvent) => {
         e.preventDefault();
         const {data, error} = await supabase.auth.signInWithPassword({ email, password });
         if (error) {
-            alert(error.message);
+      showError(error.message);
         } else if (data.session) {
-            console.log('Logged In:', data);
+      showSuccess("Logged in successfully!");
             router.push('/dashboard');
         } else {
-            alert("Check your email for confirmation link!");
+      showInfo("Check your email for the confirmation link!");
         }
     }
     const handleGoogleSignIn = async () => {
@@ -46,6 +44,12 @@ const LoginPage = () => {
     };
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <button
+            onClick={() => router.back()}
+            className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-muted-foreground hover:text-foreground transition-all hover:cursor-pointer"
+        >
+            <ArrowLeft className="size-4 sm:size-5" /> Back
+        </button>
         <div className="w-full h-screen max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
             <div className="hidden lg:block lg:col-span-2">
                 <Image 

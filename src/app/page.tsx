@@ -201,7 +201,7 @@ const HomePage = () => {
             <h1 className="font-bold text-2xl sm:text-3xl sm:w-sm"> The ultimate foundation for your ideas and projects.</h1>
             <p className="text-sm sm:text-lg font-medium text-muted-foreground">Your workspace hub transforms how you organize information, collaborate, and bring your visions to life, making productivity intuitive and effortless. Empowering individuals and teams worldwide, we constantly evolve to ensure your best work is always within reach.</p>
           </span>
-          <Image src="hero_image.svg" alt={"Image"} width={400} height={500} draggable="false" />
+          <Image src="idea_image.svg" alt={"Image"} width={400} height={500} draggable="false" />
         </motion.div>
         <motion.div 
           variants={staggerContainer} 

@@ -15,6 +15,8 @@ import { Label } from "@/components/ui/label"
 import Logo from "@/components/ui/Logo";
 import { supabase } from "@/lib/supabaseClient";
 import { signInWithGoogle } from "@/utils/actions";
+import { useAuthToast } from "@/utils/helpers";
+import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
@@ -26,26 +28,26 @@ const RegisterPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const { error: showError, success: showSuccess, info: showInfo } = useAuthToast();
     const router = useRouter();
 
     const signUp = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match");
+            showError("Passwords do not match.");
             return;
         }
 
         const { data, error } = await supabase.auth.signUp({ email, password });
 
         if (error) {
-            console.error(error.message);
-            alert(error.message);
+            showError(error.message);
         } else if (data.session) {
-            console.log('Signed Up:', data);
+            showSuccess("Account created! Redirecting...");
             router.push('/dashboard');
         } else {
-            alert("Check your email for confirmation link!");
+            showInfo("Check your email for the confirmation link!");
         }
     };
     const handleGoogleSignIn = async () => {
@@ -57,6 +59,12 @@ const RegisterPage = () => {
     
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <button
+            onClick={() => router.back()}
+            className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-muted-foreground hover:text-foreground transition-all hover:cursor-pointer"
+        >
+            <ArrowLeft className="size-4 sm:size-5" /> Back
+        </button>
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
             <div className="w-full max-w-md mx-auto lg:mx-0">
                 <Logo className="relative bottom-10 text-center text-2xl hover:opacity-100"/>

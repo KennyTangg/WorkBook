@@ -75,9 +75,6 @@ export function NavProjects({ userId ,projects }: {
     <>
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Pages</SidebarGroupLabel>
-      <SidebarGroupAction title="Add New Pages">
-        <Plus className="hover:cursor-pointer"/> <span className="sr-only">Add New Pages</span>
-      </SidebarGroupAction>
       <SidebarMenu>
         {projects.map((project) => (
           <SidebarMenuItem key={project.id}>

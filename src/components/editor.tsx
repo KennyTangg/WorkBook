@@ -78,12 +78,12 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   };
 
   return (
-    <main className="px-12 sm:px-8 xl:px-2">
+    <main className="px-8 sm:px-6 xl:px-2">
       <header className="flex items-center gap-2 group">
           {isEditingTitle ? (
             <>
               <input
-                className="font-bold text-3xl bg-transparent border-b outline-none"
+                className="font-bold text-2xl sm:text-3xl bg-transparent border-b outline-none"
                 value={titleValue}
                 onChange={(e) => setTitleValue(e.target.value)}
                 onKeyDown={handleTitleKeyDown}
@@ -93,7 +93,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
             </>
           ) : (
             <>
-              <h1 className="font-bold text-3xl"> {titleValue || "Untitled"} </h1>
+              <h1 className="font-bold text-2xl sm:text-3xl"> {titleValue || "Untitled"} </h1>
               <Pencil className="size-5 ml-2 opacity-0 group-hover:opacity-50 hover:opacity-80 transition-all cursor-pointer" onClick={() => setIsEditingTitle(true)} />
             </>
           )}
@@ -124,7 +124,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
           </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
+          <DialogHeader className="text-left">
             <DialogTitle>Add Blocks</DialogTitle>
             <DialogDescription>Pick a block to create</DialogDescription>
           </DialogHeader>
@@ -177,7 +177,7 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
         {isEditing ? (
           <>
             <input
-              className="font-medium text-sm bg-transparent border-b outline-none"
+              className="font-medium text-sm sm:text-base bg-transparent border-b outline-none"
               value={value}
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -187,7 +187,7 @@ const BlockToDo = ({ block, onUpdate }: BlockComponentProps) => {
           </>
         ) : (
           <>
-            <Label htmlFor={block.id}>{block.content}</Label>
+            <Label className="text-sm sm:text-base font-normal" htmlFor={block.id}>{block.content}</Label>
             <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
           </>  
         )}
@@ -220,7 +220,7 @@ const BlockHeading = ({ block, onUpdate }: BlockComponentProps) => {
       {isEditing ? (
         <>
           <input
-            className="font-medium text-xl bg-transparent border-b outline-none"
+            className="font-medium text-lg sm:text-xl bg-transparent border-b outline-none"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -230,7 +230,7 @@ const BlockHeading = ({ block, onUpdate }: BlockComponentProps) => {
         </>
       ) : (
         <>
-          <h1 className="font-medium text-xl">{block.content}</h1>
+          <h1 className="font-medium text-lg sm:text-xl">{block.content}</h1>
           <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
         </>
       )}
@@ -261,7 +261,7 @@ const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
       {isEditing ? (
         <>
           <input
-            className="font-medium px-2 py-1 bg-transparent border-b outline-none"
+            className="sm:text-lg font-medium px-2 py-1 bg-transparent border-b outline-none"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -271,7 +271,7 @@ const BlockParagraph = ({ block, onUpdate }: BlockComponentProps) => {
         </>
       ) : (
         <>
-          <p className="px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
+          <p className="sm:text-lg px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
           <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
         </>
       )}

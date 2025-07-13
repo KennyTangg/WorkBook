@@ -75,13 +75,9 @@ export function AppSidebar({ user, pages, ...props } : {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton className="hover:cursor-pointer" tooltip="Manage your account and settings">
+              <SidebarMenuButton onClick={() => router.push("/dashboard/settings")} className="hover:cursor-pointer" tooltip="Manage your account and settings">
                 <Settings />
                 <span>Settings</span>
-              </SidebarMenuButton>
-              <SidebarMenuButton className="hover:cursor-pointer">
-                <Trash2 />
-                <span>Trash</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
