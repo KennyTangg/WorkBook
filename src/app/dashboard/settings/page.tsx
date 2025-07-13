@@ -1,6 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import ClientSettings from "@/components/settings-theme";
 
 export default async function SettingsPage() {

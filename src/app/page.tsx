@@ -17,25 +17,25 @@ const testimonials = [
     quote: "From academic research to daily to-do lists, WorkBook handles it all. The ability to link notes to my schedule and search everything instantly means no idea ever gets lost.",
     name: "David Kim",
     title: "University Researcher",
-    image: "testimony1_image.jpg"
+    image: "/testimony1_image.jpg"
   },
   {
     quote: "WorkBook has been a game-changer for my scattered thoughts. Everything is so neatly organized now, and I finally feel in control of my projects. The customizable dashboard is a lifesaver!",
     name: "Aisha Rahman",
     title: "Marketing Manager",
-    image: "testimony2_image.jpg" 
+    image: "/testimony2_image.jpg" 
   },
   {
     quote: "I used to jump between three different apps for notes and scheduling. WorkBook brought it all together seamlessly. My productivity has genuinely soared, and I'm hitting deadlines with ease.",
     name: "Ben Carter",
     title: "Software Developer",
-    image: "testimony3_image.jpg" 
+    image: "/testimony3_image.jpg" 
   },
   {
     quote: "The clean interface and intuitive features make WorkBook a joy to use. It's transformed how I manage my freelance clients and personal tasks. Simple, yet incredibly powerful.",
     name: "Chloe Lee",
     title: "Freelance Photographer",
-    image: "testimony4_image.jpg" 
+    image: "/testimony4_image.jpg" 
   }
 ];
 
@@ -167,9 +167,11 @@ const HomePage = () => {
               <CarouselContent>
                 {testimonials.map((testimonial, index) => (
                   <CarouselItem key={index} className="flex flex-col lg:flex-row items-center gap-6 lg:gap-8 select-none p-4">
-                      <img 
+                      <Image 
                         src={testimonial.image} 
-                        alt={testimonial.name} 
+                        alt={testimonial.name}
+                        width={400}
+                        height={400}
                         className="w-full max-w-sm lg:max-w-lg h-auto rounded-lg"
                       />
                     <div className="space-y-2 text-center lg:text-left lg:text-lg">

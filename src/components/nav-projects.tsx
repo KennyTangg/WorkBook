@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { Folder, MoreHorizontal, Plus, SquarePen, Trash2 } from "lucide-react"
+import { Folder, MoreHorizontal, SquarePen, Trash2 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
-import { SidebarGroup, SidebarGroupAction, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, useSidebar} from "@/components/ui/sidebar"
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, useSidebar} from "@/components/ui/sidebar"
 import { usePathname, useRouter } from "next/navigation"
 import { deletePage } from "@/actions/delete-page"
 import { toast } from "sonner"

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export default async function DashboardPage() {
+const DashboardPage = () => {
   return (
     <>
       <main className="min-h-screen">
@@ -21,3 +21,5 @@ export default async function DashboardPage() {
     </>
   )
 }
+
+export default DashboardPage;

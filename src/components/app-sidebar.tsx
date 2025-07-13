@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Frame, GalleryVerticalEnd, Home, Search, Settings, SquarePen, Trash2 } from "lucide-react";
+import { Frame, GalleryVerticalEnd, Home, Search, Settings, SquarePen } from "lucide-react";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";

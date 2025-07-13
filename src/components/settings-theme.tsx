@@ -14,6 +14,7 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { useRouter } from "next/navigation";
 
 const ClientSettings = ({ user }: {
   user: { 
@@ -24,10 +25,14 @@ const ClientSettings = ({ user }: {
   };
 }) => {
   const {theme, setTheme } = useTheme();
+  
+  const [newUsername, setNewUsername] = useState(user.username);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
+  const [nameLoading, setnameLoading] = useState(false);
+  const router = useRouter();
+
   const HandleChangePassword = async () => {
     if (password !== confirmPassword){
         alert("Password don't match!");
@@ -43,6 +48,23 @@ const ClientSettings = ({ user }: {
     } else {
       alert("Password updated successfully!");
     }
+  }
+
+  const HandleUsername = async () => {
+    setnameLoading(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({username: newUsername })
+      .eq("id", user.id)
+
+    setnameLoading(false);
+    if(error){
+        console.error(error);
+        alert("Error updating username: " + error.message);
+    } else {
+        alert("Username updated successfully!")
+    }
+    router.refresh();
   }
 
   return (
@@ -75,8 +97,11 @@ const ClientSettings = ({ user }: {
           <Input type="email" value={user.email} disabled />
 
           <Label>Username</Label>
-          <Input type="text" value={user.username} disabled />
+          <Input type="text" value={newUsername} onChange={(e) => setNewUsername(e.target.value)} />
 
+          <Button onClick={HandleUsername} disabled={nameLoading}>
+            {nameLoading ? "Updating..." : "Change Username" }
+          </Button>
           {user.hasPassword && (
             <>
             <Label>New Password</Label>

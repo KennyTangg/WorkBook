@@ -3,7 +3,6 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
-import { Toaster } from "sonner";
 
 export const dynamic = 'force-dynamic';
 
@@ -83,7 +82,6 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         </header>
         <div className="min-h-screen max-w-6xl w-full mx-auto">
           {children}
-          <Toaster />
         </div>
       </SidebarInset>
     </SidebarProvider>
