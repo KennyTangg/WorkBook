@@ -4,7 +4,7 @@ import { toast } from "sonner";
 export function getFriendlyAuthErrorMessage(errorMessage: string): string {
   const message = errorMessage.toLowerCase();
 
-  if (message.includes("invalid login credentials")) {
+  if (message.includes("invalid login credentials") || message.includes("invalid email or password")) {
     return "Email or password is incorrect. Please try again.";
   }
 
@@ -22,6 +22,18 @@ export function getFriendlyAuthErrorMessage(errorMessage: string): string {
 
   if (message.includes("invalid email or password")) {
     return "Email or password is incorrect.";
+  }
+  
+  if (message.includes("user not found")) {
+    return "No account was found with that email address.";
+  }
+
+  if (message.includes("reset token invalid")) {
+    return "Your password reset link is invalid. Please request a new link.";
+  }
+
+  if (message.includes("reset token expired")) {
+    return "Your password reset link has expired. Please request a new one.";
   }
 
   return "Something went wrong. Please try again.";

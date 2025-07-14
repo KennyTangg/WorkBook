@@ -1,29 +1,26 @@
 'use client';
 
 import { Button } from "@/components/ui/button"
-import { Card, CardAction, CardContent,  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardAction, CardContent,  CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase } from "@/utils/supabase/client";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { FcGoogle } from 'react-icons/fc';
-import Logo from "@/components/ui/Logo";
 import {signInWithGoogle} from "@/utils/actions";
-import { useAuthToast } from "@/utils/helpers";
 import { ArrowLeft } from "lucide-react";
+import { useAuthToast } from "@/utils/helpers";
+import Image from "next/image";
+import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
- const { error: showError, success: showSuccess, info: showInfo } = useAuthToast();
+    const { error: showError, success: showSuccess, info: showInfo } = useAuthToast();
+    
     const signIn = async (e: React.FormEvent) => {
         e.preventDefault();
         const {data, error} = await supabase.auth.signInWithPassword({ email, password });
@@ -36,12 +33,29 @@ const LoginPage = () => {
       showInfo("Check your email for the confirmation link!");
         }
     }
+
     const handleGoogleSignIn = async () => {
         const url = await signInWithGoogle();
         if (url) {
             window.location.href = url;
         }
     };
+
+    const handleForgotPassword = async () => {
+        if (!email) {
+            showError("Please enter your email first.");
+            return;
+        }
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/reset`
+        });
+        if (error) {
+            showError(error.message);
+        } else {
+            showSuccess("Password reset email sent! Check your inbox.");
+        }
+    };
+
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <button
@@ -91,9 +105,8 @@ const LoginPage = () => {
                                 <div className="grid gap-2 sm:gap-4">
                                 <div className="flex items-center">
                                     <Label htmlFor="password" className="sm:text-md" >Password</Label>
-                                    <a
-                                    href="#"
-                                    className="text-sm ml-auto inline-block underline-offset-4 hover:underline"
+                                    <a onClick={handleForgotPassword}
+                                    className="text-sm ml-auto inline-block underline-offset-4 hover:underline hover:cursor-pointer"
                                     >
                                     Forgot your password?
                                     </a>
