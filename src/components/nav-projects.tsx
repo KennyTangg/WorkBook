@@ -11,6 +11,7 @@ import { supabase } from "@/utils/supabase/client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import Link from "next/link"
 
 export function NavProjects({ userId ,projects }: { 
   userId: string,
@@ -79,9 +80,9 @@ export function NavProjects({ userId ,projects }: {
         {projects.map((project) => (
           <SidebarMenuItem key={project.id}>
             <SidebarMenuButton asChild>
-              <a href={project.url}>
+              <Link href={project.url}>
                 <span>{project.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

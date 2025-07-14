@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { createNewPage } from "@/actions/create-page";
 import { comingSoon } from "@/utils/helpers";
+import Link from "next/link";
 
 export function AppSidebar({ user, pages, ...props } : {
   user: {
@@ -55,10 +56,10 @@ export function AppSidebar({ user, pages, ...props } : {
                 <span>Search</span>
               </SidebarMenuButton>
               <SidebarMenuButton asChild className="hover:cursor-pointer">
-                <a href="/dashboard/home">
+                <Link href="/dashboard/home">
                   <Home />
                   <span>Home</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
               <SidebarMenuButton className="hover:cursor-pointer" onClick={handleNewPage} disabled={isPending}>
                 <SquarePen />
@@ -76,10 +77,12 @@ export function AppSidebar({ user, pages, ...props } : {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => router.push("/dashboard/settings")} className="hover:cursor-pointer" tooltip="Manage your account and settings">
-                <Settings />
-                <span>Settings</span>
+              <Link href={"/dashboard/settings"}>
+              <SidebarMenuButton className="hover:cursor-pointer" tooltip="Manage your account and settings">
+                  <Settings />
+                  <span>Settings</span>
               </SidebarMenuButton>
+              </Link>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>

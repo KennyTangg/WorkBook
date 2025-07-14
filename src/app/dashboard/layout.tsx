@@ -4,8 +4,6 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/s
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
-export const dynamic = 'force-dynamic';
-
 interface DashboardLayoutProps {
   children: ReactNode;
 }
