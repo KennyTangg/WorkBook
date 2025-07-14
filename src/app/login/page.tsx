@@ -8,7 +8,7 @@ import { Card, CardAction, CardContent,  CardDescription,
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -50,7 +50,7 @@ const LoginPage = () => {
         >
             <ArrowLeft className="size-4 sm:size-5" /> Back
         </button>
-        <div className="w-full h-screen max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
+        <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
             <div className="hidden lg:block lg:col-span-2">
                 <Image 
                     src="sign_in_image.svg" 

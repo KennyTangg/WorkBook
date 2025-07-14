@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ChevronsUpDown, Sparkles, BadgeCheck, CreditCard, Bell, LogOut } from "lucide-react";
 import { Dialog,DialogContent, DialogHeader,  DialogTitle, DialogDescription, DialogFooter, DialogClose} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { comingSoon } from "@/utils/helpers";
@@ -23,6 +23,8 @@ export function NavUser({ user }: {
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const router = useRouter();
+  const displayName = user.name?.trim() || "Anonymous";
+  const displayEmail = user.email?.trim() || "No email";
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
@@ -44,15 +46,15 @@ export function NavUser({ user }: {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
                   src={user.avatar || "/default-avatar.png"}
-                  alt={user.name}
+                  alt={displayName}
                 />
                 <AvatarFallback className="rounded-lg">
-                  {user.name?.[0]?.toUpperCase() || "U"}
+                  {displayName[0]?.toUpperCase() || "WB"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-medium">{displayName}</span>
+                <span className="truncate text-xs">{displayEmail}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -69,15 +71,15 @@ export function NavUser({ user }: {
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
                     src={user.avatar || "/default-avatar.png"}
-                    alt={user.name}
+                    alt={displayName}
                   />
                   <AvatarFallback className="rounded-lg">
-                    {user.name?.[0]?.toUpperCase() || "U"}
+                    {displayName[0]?.toUpperCase() || "U"}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-medium">{displayName}</span>
+                  <span className="truncate text-xs">{displayEmail}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

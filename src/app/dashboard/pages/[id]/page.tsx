@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import Editor from "@/components/editor";
 import { notFound } from "next/navigation";
 
@@ -17,7 +17,7 @@ export default async function Page({ params }: { params: { id: string } }) {
     .from("blocks")
     .select("*")
     .eq("page_id", id)
-    .order("position");
+    .order("position",{ ascending: true });
 
   return <Editor page={page} blocks={blocks || []} />;
 }

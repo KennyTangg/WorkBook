@@ -13,7 +13,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 
 const ClientSettings = ({ user }: {

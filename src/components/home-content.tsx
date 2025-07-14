@@ -6,6 +6,9 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { HomePage } from "@/types";
 import { comingSoon } from "@/utils/helpers";
+import { useTransition } from "react";
+import { createNewPage } from "@/actions/create-page";
+import { useRouter } from "next/navigation";
 
 
 interface HomeContentProps {
@@ -24,6 +27,17 @@ export default function HomeContent({
   error,
   userId
 }: HomeContentProps) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  
+  const handleNewPage = async () => {
+    startTransition(async () => {
+      if (!userId?.id) return;
+      const page = await createNewPage(userId.id);
+      router.push(`/dashboard/pages/${page.id}`);
+    });
+  };
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-start px-4 py-12">
       <div className="flex flex-col items-center justify-center gap-3">
@@ -44,9 +58,11 @@ export default function HomeContent({
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-4 mt-8">
-        <Button size="lg">+ New Page</Button>
-        <Button onClick={comingSoon} variant="outline" size="lg">
+      <div className="flex flex-wrap gap-4 mt-8 w-full justify-center">
+        <Button onClick={handleNewPage} size="lg" disabled={isPending} className="w-full sm:w-auto">
+          {isPending ? "Creating..." : "New Page"}
+        </Button>
+        <Button onClick={comingSoon} variant="outline" size="lg" className="w-full sm:w-auto">
           Browse Templates
         </Button>
       </div>

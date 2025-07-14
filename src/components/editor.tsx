@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, Pencil, Plus, Trash2 } from "lucide-react";
 import { Block, BlockComponentProps, Page } from "@/types";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 
@@ -19,6 +19,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState(page.title || "Untitled");
   const [isReordering, setIsReordering] = useState(false);
+  const [selectedBlockType, setSelectedBlockType] = useState<Block["type"] | null>(null);
   const router = useRouter();
 
   const handleUpdateTitle = async () => {
@@ -94,30 +95,25 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
     );
   };
 
-   const handleDragEnd = async (result: DropResult) => {
+  const handleDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
     const reordered = Array.from(blocks);
     const [moved] = reordered.splice(result.source.index, 1);
     reordered.splice(result.destination.index, 0, moved);
 
-    const updatedBlocks = reordered.map((block, index) => ({
-      ...block,
-      position: index,
-    }));
+    const updatedBlocks = reordered.map((block, index) => ({ ...block, position: index }));
 
     setBlocks(updatedBlocks);
 
     const updates = updatedBlocks.map(({ id, position }) => ({ id, position }));
+    const { error } = await supabase.from("blocks").upsert(updates, { onConflict: 'id'});
 
-    const { error } = await supabase.from("blocks").upsert(updates);
     if (error) {
       console.error("Reorder error:", error);
     } else {
-      console.log("Reorder success!");
+      console.log("Reorder success!", updates);
     }
-
-    router.refresh();
   };
   
   return (
@@ -189,7 +185,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
         </section>
       )}
 
-      <div className="flex justify-end gap-2 mt-4">
+      <div className="flex justify-end gap-2 my-4">
         <Dialog>
           <DialogTrigger asChild>
             <Button>
@@ -202,7 +198,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
               <DialogTitle>Add Blocks</DialogTitle>
               <DialogDescription>Pick a block to create</DialogDescription>
             </DialogHeader>
-            <Select onValueChange={addBlock}>
+            <Select onValueChange={(value) => setSelectedBlockType(value as Block["type"])}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select a Block" />
               </SelectTrigger>
@@ -216,8 +212,18 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
               </SelectContent>
             </Select>
             <DialogFooter>
+              <Button 
+                onClick={async () => {
+                  if (selectedBlockType) {
+                    await addBlock(selectedBlockType);
+                  }
+                }}
+                disabled={!selectedBlockType}
+              >
+                Add Block
+              </Button>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline" onClick={() => setSelectedBlockType(null)}>Cancel</Button>
               </DialogClose>
             </DialogFooter>
           </DialogContent>
@@ -267,8 +273,10 @@ const BlockToDo = ({ block, onUpdate, onDelete }: BlockComponentProps) => {
         ) : (
           <>
             <Label className="text-sm sm:text-base font-normal" htmlFor={block.id}>{block.content}</Label>
-            <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
-            <Trash2 className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)}/>
+            <div className="flex items-center ml-2 shrink-0">
+              <Pencil className="size-4 cursor-pointer hover:opacity-80 sm:opacity-0 sm:group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+              <Trash2 className="size-4 ml-2 cursor-pointer hover:opacity-80 sm:opacity-0 sm:group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)} />
+            </div>
           </>  
         )}
       </div>
@@ -311,8 +319,10 @@ const BlockHeading = ({ block, onUpdate, onDelete }: BlockComponentProps) => {
       ) : (
         <>
           <h1 className="font-medium text-lg sm:text-xl">{block.content}</h1>
-          <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
-          <Trash2 className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)}/>
+          <div className="flex items-center ml-2 shrink-0">
+            <Pencil className="size-4 cursor-pointer hover:opacity-80 sm:opacity-0 sm:group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+            <Trash2 className="size-4 ml-2 cursor-pointer hover:opacity-80 sm:opacity-0 sm:group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)} />
+          </div>
         </>
       )}
     </div>
@@ -352,9 +362,11 @@ const BlockParagraph = ({ block, onUpdate, onDelete }: BlockComponentProps) => {
         </>
       ) : (
         <>
-          <p className="sm:text-lg px-2 py-1 rounded-lg hover:bg-accent">{block.content}</p>
-          <Pencil className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50" onClick={() => setIsEditing(true)} />
-          <Trash2 className="size-4 ml-4 opacity-0 cursor-pointer hover:opacity-80 group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)}/>
+          <p className="sm:text-lg px-2 py-1 rounded-lg">{block.content}</p>
+          <div className="flex items-center ml-2 shrink-0">
+            <Pencil className="size-4 cursor-pointer hover:opacity-80 sm:opacity-0 sm:group-hover:opacity-50" onClick={() => setIsEditing(true)} />
+            <Trash2 className="size-4 ml-2 cursor-pointer hover:opacity-80 sm:opacity-0 sm:group-hover:opacity-50 hover:text-red-500" onClick={() => onDelete(block.id)} />
+          </div>
         </>
       )}
     </div>

@@ -4,7 +4,7 @@
 import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/utils/supabase/client';
 
 export function Providers({ children }: { children: ReactNode }) {
   return (

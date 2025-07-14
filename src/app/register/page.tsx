@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Logo from "@/components/ui/Logo";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import { signInWithGoogle } from "@/utils/actions";
 import { useAuthToast } from "@/utils/helpers";
 import { ArrowLeft } from "lucide-react";

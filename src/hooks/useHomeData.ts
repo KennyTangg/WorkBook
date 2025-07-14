@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabase/client";
 import { HomePage, SupabaseUser, UserProfile } from "@/types";
 import { createSafeUsername } from "@/utils/helpers";
 

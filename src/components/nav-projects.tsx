@@ -7,7 +7,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, Sideba
 import { usePathname, useRouter } from "next/navigation"
 import { deletePage } from "@/actions/delete-page"
 import { toast } from "sonner"
-import { supabase } from "@/lib/supabaseClient"
+import { supabase } from "@/utils/supabase/client"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
