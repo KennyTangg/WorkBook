@@ -1,5 +1,3 @@
-// components/dashboard-content.tsx
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -10,26 +8,21 @@ import { useTransition } from "react";
 import { createNewPage } from "@/actions/create-page";
 import { useRouter } from "next/navigation";
 
-
 interface HomeContentProps {
   pages: HomePage[];
-  loading: boolean;
-  error: string | null;
   userId: {
     id: string;
     username: string;
-  } | null;
+  };
 }
 
 export default function HomeContent({
   pages,
-  loading,
-  error,
   userId
 }: HomeContentProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  
+
   const handleNewPage = async () => {
     startTransition(async () => {
       if (!userId?.id) return;
@@ -51,7 +44,7 @@ export default function HomeContent({
           transition={{ duration: 4, ease: "easeInOut", repeat: Infinity }}
         />
         <h1 className="font-bold text-2xl sm:text-3xl text-center text-foreground">
-          Welcome back, {userId?.username || "Anonymous"}!
+          Welcome back, {userId.username}!
         </h1>
         <p className="text-muted-foreground text-center text-sm">
           Your minimal block-based editor for notes, ideas & tasks.
@@ -70,19 +63,11 @@ export default function HomeContent({
       <div className="w-full max-w-4xl mt-12">
         <h2 className="text-lg font-semibold mb-4">Recent Pages</h2>
 
-        {loading && <p className="text-muted-foreground">Loading...</p>}
-
-        {error && (
-          <p className="text-destructive">Something went wrong: {error}</p>
-        )}
-
-        {!loading && pages.length === 0 && (
+        {pages.length === 0 ? (
           <p className="text-muted-foreground text-sm">
             You have no pages yet. Create your first one!
           </p>
-        )}
-
-        {!loading && pages.length > 0 && (
+        ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {pages.map((page) => (
               <div

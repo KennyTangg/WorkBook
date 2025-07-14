@@ -60,7 +60,7 @@ const RegisterPage = () => {
   return (
     <main className="min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
         <button
-            onClick={() => router.back()}
+            onClick={() => router.push("/")}
             className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-muted-foreground hover:text-foreground transition-all hover:cursor-pointer"
         >
             <ArrowLeft className="size-4 sm:size-5" /> Back

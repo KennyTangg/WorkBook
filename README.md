@@ -78,13 +78,21 @@ This project was built to deepen my practical skills in:
 │   │   │   └── callback
 │   │   ├── dashboard
 │   │   │   ├── home
-│   │   │   ├── layout.tsx
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── pages/[id]
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── settings
+│   │   │   │   ├── loading.tsx
+│   │   │   │   └── page.tsx
 │   │   │   ├── page.tsx
-│   │   │   ├── pages
-│   │   │   └── settings
+│   │   │   └── layout.tsx
 │   │   ├── login
+│   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   └── register
+│   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── reset
 │   │   │   └── page.tsx
@@ -123,12 +131,11 @@ This project was built to deepen my practical skills in:
 │   │       ├── switch.tsx
 │   │       └── tooltip.tsx
 │   ├── hooks
-│   │   ├── use-mobile.ts
-│   │   └── useHomeData.ts
+│   │   └── use-mobile.ts
 │   ├── lib
+│   │   ├── getHomeData.ts
 │   │   └── utils.ts
 │   ├── middleware.ts
-│   ├── structure.txt
 │   ├── types
 │   │   └── index.ts
 │   └── utils

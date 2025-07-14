@@ -1,12 +1,10 @@
-'use client'
-
 import HomeContent from "@/components/home-content";
-import { useHomeData } from "@/hooks/useHomeData";
+import { getHomeData } from "@/lib/getHomeData";
 
-export default function HomePageContainer() {
-  const { userId, pages, loading, error } = useHomeData();
+export default async function HomePageContainer() {
+  const { userId, pages } = await getHomeData();
 
   return (
-    <HomeContent userId={userId} pages={pages} loading={loading} error={error} />
+    <HomeContent userId={userId} pages={pages}  />
   );
 }
