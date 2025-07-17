@@ -25,7 +25,8 @@ This project was built to deepen my practical skills in:
 ✅ **Dashboard & Sidebar** — Sticky sidebar navigation for pages, quick actions, and user profile access.  
 ✅ **Create New Pages** — One-click “New Page” buttons with optimistic navigation.  
 ✅ **Recent Pages** — See recently updated pages in your dashboard.  
-✅ **Responsive UI** — Built mobile-first, with smooth animations using Framer Motion.  
+✅ **Responsive UI** — Built mobile-first, with smooth animations using Framer Motion. 
+✅ **AI Assistant (Beta)** — Ask questions or extract summaries from your page content using Gemini API. 
 
 ---
 
@@ -48,6 +49,7 @@ This project was built to deepen my practical skills in:
 | **Animation** | Framer Motion |
 | **UI Library** | Custom + Shadcn UI Components |
 | **Deployment** | Vercel |
+| **AI Integration** | Gemini API (for page summarization, Q&A, and action extraction) |
 
 ---
 
@@ -71,6 +73,7 @@ This project was built to deepen my practical skills in:
 │   └── testimony4_image.jpg
 ├── src
 │   ├── actions
+│   │   ├── ai-actions.ts
 │   │   ├── create-page.ts
 │   │   └── delete-page.ts
 │   ├── app
@@ -91,7 +94,7 @@ This project was built to deepen my practical skills in:
 │   │   ├── login
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
-│   │   └── register
+│   │   ├── register
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
 │   │   ├── reset
@@ -102,6 +105,8 @@ This project was built to deepen my practical skills in:
 │   ├── components
 │   │   ├── NavBar.tsx
 │   │   ├── Providers.tsx
+│   │   ├── ai-result.tsx
+│   │   ├── ai-tools.tsx
 │   │   ├── app-sidebar.tsx
 │   │   ├── editor.tsx
 │   │   ├── home-content.tsx
@@ -133,6 +138,10 @@ This project was built to deepen my practical skills in:
 │   ├── hooks
 │   │   └── use-mobile.ts
 │   ├── lib
+│   │   ├── prompts
+│   │   │   ├── extract-actions.ts
+│   │   │   ├── page-summary.ts
+│   │   │   └── qna-page.ts
 │   │   ├── getHomeData.ts
 │   │   └── utils.ts
 │   ├── middleware.ts

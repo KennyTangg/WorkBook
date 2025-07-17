@@ -11,6 +11,7 @@ import { Block, BlockComponentProps, Page } from "@/types";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
+import AITools from "./ai-tools";
 
 type EditorProps = { page: Page; blocks: Block[] };
 
@@ -138,7 +139,7 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
           )}
       </header>
       <hr className="mt-4 border-b-1 rounded-lg border-muted-foreground" />
-      
+      <AITools blocks={blocks} />
       {isReordering ? (
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="blocks">
