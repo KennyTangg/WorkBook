@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import NavBar from "@/components/NavBar";
+import NavBar from "@/components/nav-bar";
 import Logo from "@/components/ui/Logo";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
@@ -89,10 +89,10 @@ const HomePage = () => {
               Organize your thoughts, manage your schedule, and unleash your productivity.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Link href="/login" passHref>
+              <Link href="/login" passHref prefetch>
                 <Button size="lg" className="w-full sm:w-auto">Get Started - Login</Button>
               </Link>
-              <Link href="/register" passHref>
+              <Link href="/register" passHref prefetch>
                 <Button size="lg" variant="outline" className="w-full sm:w-auto">Create Account</Button>
               </Link>
             </div>
@@ -221,9 +221,9 @@ const HomePage = () => {
           <div className="space-y-6 text-center lg:text-left">
             <h1 className="font-bold text-lg sm:text-2xl mb-2 sm:mb-6">Ready to get started?</h1>
             <p className="max-w-lg text-sm sm:text-lg text-muted-foreground mx-auto lg:mx-0">Create an account instantly to get started or contact us to manage a custom workspace for your workbook.</p>
-            <span>
-              <Button size="lg" className="w-full sm:w-auto"><Link href={"/register"}>Start Now</Link></Button>
-            </span>
+            <Link href={"/register"} passHref prefetch>
+              <Button size="lg" className="w-full sm:w-auto">Start Now</Button>
+            </Link>
           </div>
           <motion.div className="w-12 h-12 mb-12 lg:mb-0 lg:w-28 lg:h-28 shadow-md bg-primary rounded-lg mx-auto " 
             animate={{scale: [1, 2, 2, 1], rotate: [0, 90, 90, 0], borderRadius: ["10%", "10%", "50%", "10%"]}}

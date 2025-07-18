@@ -104,13 +104,14 @@ This project was built to deepen my practical skills in:
 │   │   ├── globals.css
 │   │   └── layout.tsx
 │   ├── components
-│   │   ├── NavBar.tsx
 │   │   ├── Providers.tsx
 │   │   ├── ai-result.tsx
 │   │   ├── ai-tools.tsx
 │   │   ├── app-sidebar.tsx
+│   │   ├── dashboard-layout.tsx
 │   │   ├── editor.tsx
 │   │   ├── home-content.tsx
+│   │   ├── nav-bar.tsx
 │   │   ├── nav-projects.tsx
 │   │   ├── nav-user.tsx
 │   │   ├── settings-theme.tsx
@@ -143,6 +144,9 @@ This project was built to deepen my practical skills in:
 │   │   │   ├── extract-actions.ts
 │   │   │   ├── page-summary.ts
 │   │   │   └── qna-page.ts
+│   │   ├── getUser.ts
+│   │   ├── getDashboardData.ts
+│   │   ├── getPageData.ts
 │   │   ├── getHomeData.ts
 │   │   └── utils.ts
 │   ├── middleware.ts

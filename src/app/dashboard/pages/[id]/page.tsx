@@ -1,23 +1,13 @@
-import { supabase } from "@/utils/supabase/client";
 import Editor from "@/components/editor";
+import { getPageData } from "@/lib/getPageData";
 import { notFound } from "next/navigation";
 
+export const revalidate = 60;
+
 export default async function Page({ params }: { params: { id: string } }) {
-  const { id } = await params;
+  const data = await getPageData(params.id);
+  
+  if (!data) return notFound();
 
-  const { data: page } = await supabase
-    .from("pages")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (!page) return notFound();
-
-  const { data: blocks } = await supabase
-    .from("blocks")
-    .select("*")
-    .eq("page_id", id)
-    .order("position",{ ascending: true });
-
-  return <Editor page={page} blocks={blocks || []} />;
+  return <Editor page={data.page} blocks={data.blocks} />;
 }

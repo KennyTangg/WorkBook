@@ -56,7 +56,7 @@ export function AppSidebar({ user, pages, ...props } : {
                 <span>Search</span>
               </SidebarMenuButton>
               <SidebarMenuButton asChild className="hover:cursor-pointer">
-                <Link href="/dashboard/home">
+                <Link href="/dashboard/home" prefetch passHref>
                   <Home />
                   <span>Home</span>
                 </Link>
@@ -77,7 +77,7 @@ export function AppSidebar({ user, pages, ...props } : {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
-              <Link href={"/dashboard/settings"}>
+              <Link href={"/dashboard/settings"} passHref>
               <SidebarMenuButton className="hover:cursor-pointer" tooltip="Manage your account and settings">
                   <Settings />
                   <span>Settings</span>

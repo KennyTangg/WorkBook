@@ -83,9 +83,9 @@ const LoginPage = () => {
                         Enter your email below to login to your account
                         </CardDescription>
                         <CardAction>
-                        <Button variant="link" className="sm:text-md">
-                            <Link href={"/register"}>Sign Up</Link>
-                        </Button>
+                        <Link href={"/register"} prefetch passHref>                        
+                            <Button variant="link" className="sm:text-md">Sign Up </Button>
+                        </Link>
                         </CardAction>
                     </CardHeader>
                     <CardContent className="px-4 sm:px-6">

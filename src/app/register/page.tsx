@@ -75,9 +75,9 @@ const RegisterPage = () => {
                         Fill in the information below to get started
                         </CardDescription>
                         <CardAction>
-                        <Button variant="link" className="sm:text-md">
-                            <Link href={"/login"}>Log In</Link>
-                        </Button>
+                        <Link href={"/login"} prefetch passHref>                        
+                            <Button variant="link" className="sm:text-md">Log In</Button>
+                        </Link>
                         </CardAction>
                     </CardHeader>
                     <CardContent className="px-3 sm:px-6">

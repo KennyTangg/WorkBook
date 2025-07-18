@@ -8,7 +8,7 @@ export default function NotFound() {
       <Image src="/404_image.svg" alt={"404 image"} width={400} height={400} draggable={false} />
       <h1 className="text-2xl sm:text-4xl font-bold my-4 ">Page Not Found </h1>
       <p className="text-gray-500 mb-6 txt-sm sm:text-base">Sorry, the page you&apos;re looking for doesn&apos;t exist.</p>
-      <Link href="/" className="text-primary underline text-sm sm:text-base">Go back home</Link>
+      <Link href="/" className="text-primary underline text-sm sm:text-base" prefetch>Go back home</Link>
     </div>
   );
 }

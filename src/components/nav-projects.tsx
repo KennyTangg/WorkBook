@@ -80,7 +80,7 @@ export function NavProjects({ userId ,projects }: {
         {projects.map((project) => (
           <SidebarMenuItem key={project.id}>
             <SidebarMenuButton asChild>
-              <Link href={project.url}>
+              <Link href={project.url} prefetch passHref>
                 <span>{project.name}</span>
               </Link>
             </SidebarMenuButton>
