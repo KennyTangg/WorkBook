@@ -100,6 +100,7 @@ This project was built to deepen my practical skills in:
 │   │   ├── reset
 │   │   │   └── page.tsx
 │   │   ├── page.tsx
+│   │   ├── not-found.tsx
 │   │   ├── globals.css
 │   │   └── layout.tsx
 │   ├── components
@@ -183,6 +184,7 @@ This project was built to deepen my practical skills in:
 4. **Run locally**
    ```bash
     npm run dev
+
 ## 🗂️ Database Schema (Basic Overview)
 
 - **users** — managed by Supabase Auth

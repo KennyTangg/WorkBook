@@ -6,7 +6,7 @@ import { EXTRACT_ACTIONS_PROMPT } from "@/lib/prompts/extract-actions";
 import { QNA_PAGE_PROMPT } from "@/lib/prompts/qna-page";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 function cleanAIResponse(text: string) {
   let cleaned = text.trim();
