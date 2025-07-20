@@ -117,7 +117,7 @@ const HomePage = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-center mb-4">Unlock Your Potential with WorkBook</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-b from-foreground to-foreground/30 bg-clip-text text-transparent text-center mb-4">Unlock Your Potential with WorkBook</h2>
           <p className="text-base sm:text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 md:mb-20">WorkBook provides powerful tools to streamline your workflow and keep everything in one place.</p>
         </motion.div>
         <motion.div 

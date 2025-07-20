@@ -27,24 +27,26 @@ export async function middleware(request: NextRequest) {
   
   const { data: { session } } = await supabase.auth.getSession();
   const pathname = request.nextUrl.pathname;
-  const publicRoutes = ["/", "/login", "/register", "/auth/callback"];
-  const isPublic = publicRoutes.includes(pathname);
+  const guestOnlyRoutes = ["/" ,"/login", "/register"];
+  const hybridRoutes = ["/pricing", "/auth/callback", "/api/checkout", "/api/webhook", "/api/cancel-subscription"]; 
+  const isGuestOnly = guestOnlyRoutes.includes(pathname);
+  const isHybrid = hybridRoutes.includes(pathname);
 
-  if (!session && request.cookies.has("sb:token")) {
-    console.log("Clearing cookies...");
-    const response = NextResponse.redirect(new URL("/login", request.url));
+  // if (!session && request.cookies.has("sb:token")) {
+  //   console.log("Clearing cookies...");
+  //   const response = NextResponse.redirect(new URL("/login", request.url));
 
-    response.cookies.set("sb:token", "", { expires: new Date(0) });
-    response.cookies.set("sb:refresh_token", "", { expires: new Date(0) });
+  //   response.cookies.set("sb:token", "", { expires: new Date(0) });
+  //   response.cookies.set("sb:refresh_token", "", { expires: new Date(0) });
 
-    return response;
-  }
+  //   return response;
+  // }
 
-  if (!session && !isPublic) {
+  if (!session && !isHybrid && !isGuestOnly) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (session && isPublic && pathname !== "/auth/callback") {
+  if (session && isGuestOnly) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
