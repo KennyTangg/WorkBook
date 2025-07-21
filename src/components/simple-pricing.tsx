@@ -6,82 +6,25 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Sparkles, ArrowRight, Check, Star, Zap, Shield } from 'lucide-react';
+import { Sparkles, ArrowRight, Check, ArrowLeft } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { User } from "@supabase/supabase-js";
-
-const plans = [
-    {
-      id: 'free',
-      name: 'Free',
-      icon: Star,
-      priceId: null,
-      price: {
-        monthly: 'Free',
-        yearly: 'Free',
-      },
-      description: 'Perfect for personal notes and casual users.',
-      features: [
-        'Unlimited pages',
-        'Basic block editor',
-        'Save to cloud with Supabase',
-        'Access from any device',
-        'Limited AI assistant (3 uses/day)',
-      ],
-      cta: 'Start for free',
-    },
-    {
-      id: 'pro',
-      name: 'Pro',
-      icon: Zap,
-      priceId: {
-        monthly: 'price_1RmcscBXXNQaF2mYRCytDzjm',
-        yearly: 'price_1RmcwABXXNQaF2mYgr4cSayI',
-      },
-      price: {
-        monthly: 5,
-        yearly: 4,
-      },
-      description: 'Unlock more power for daily use and focused work.',
-      features: [
-        'All Free features',
-        'Custom block themes',
-        'Full AI assistant access',
-        'Daily cloud backups',
-      ],
-      cta: 'Upgrade to Pro',
-      popular: true,
-    },
-    {
-      id: 'creator',
-      name: 'Creator',
-      icon: Shield,
-      priceId: {
-        monthly: 'price_1RmdPABXXNQaF2mYwVo164W6',
-        yearly: 'price_1RmdQnBXXNQaF2mYZNlVSLNb',
-      },
-      price: {
-        monthly: 12,
-        yearly: 10,
-      },
-      description: 'Designed for creators, writers, and productivity pros.',
-      features: [
-        'All Pro features',
-        'Early New AI assistant access',
-        'Early access to new features',
-        'Priority support',
-      ],
-      cta: 'Go Creator',
-    },
-  ];
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
+import { plans } from '@/lib/constants';
 
 export default function SimplePricing({ user, currentPlan } : { 
   user: User | null,
   currentPlan: string | null
  }) {
   const [frequency, setFrequency] = useState<string>('monthly');
+  const [isCanceling, setIsCanceling] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -98,37 +41,26 @@ export default function SimplePricing({ user, currentPlan } : {
 
     const selectedPlan = plans.find((p) => p.id === planId);
       if (!selectedPlan) {
-        alert('Invalid plan.');
+        toast.error("Invalid plan");
         return;
       }
 
       if (currentPlan === planId) {
-        alert(`You are already on the ${selectedPlan.name} plan.`);
+        toast("Already Subscribed", {
+          description: `You're already on the ${selectedPlan.name} plan.`,
+        });
         return;
       }
 
-      if (planId === 'free') {
-        const res = await fetch('/api/cancel-subscription', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId: user.id }),
-          credentials: 'include',
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          alert('Your subscription has been canceled. You are now on the Free plan.');
-          window.location.reload();
-        } else {
-          alert(data?.error || 'Failed to cancel subscription.');
-        }
-
+      if (planId === "free") {
+        setSelectedPlanId(planId);
+        setShowCancelDialog(true);
         return;
       }
 
       const priceId = selectedPlan.priceId?.[frequency as 'monthly' | 'yearly'];
       if (!priceId) {
-        alert('No price ID found for selected plan.');
+        toast.error("No price ID found for selected plan.");
         return;
       }
       
@@ -143,7 +75,7 @@ export default function SimplePricing({ user, currentPlan } : {
       if (data?.url) {
         window.location.href = data.url;
       } else {
-        alert('Something went wrong. Try again.');
+        toast.error("Something went wrong. Try again.");
       }
   };
   
@@ -154,6 +86,12 @@ export default function SimplePricing({ user, currentPlan } : {
         <div className="absolute -bottom-[10%] -right-[10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-[10%] -left-[10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-3xl" />
       </div>
+      <button
+            onClick={() => router.push("/dashboard")}
+            className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-muted-foreground hover:text-foreground transition-all hover:cursor-pointer"
+        >
+            <ArrowLeft className="size-4 sm:size-5" /> Back
+      </button>
 
       <div className="flex flex-col items-center justify-center gap-8">
         <div className="flex flex-col items-center space-y-2">
@@ -168,7 +106,7 @@ export default function SimplePricing({ user, currentPlan } : {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-gradient-to-b from-foreground to-foreground/30 bg-clip-text text-transparent text-4xl font-bold sm:text-5xl"
+            className="text-foreground text-4xl font-bold sm:text-5xl"
           >
             Pick the perfect plan for your needs
           </motion.h1>
@@ -363,6 +301,51 @@ export default function SimplePricing({ user, currentPlan } : {
               </Card>
             </motion.div>
           ))}
+
+          <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you sure?</DialogTitle>
+                <p className="text-sm text-muted-foreground">
+                  Do you really want to cancel your current plan and switch to Free?
+                </p>
+              </DialogHeader>
+              <DialogFooter className="flex gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  disabled={isCanceling}
+                  onClick={() => setShowCancelDialog(false)}
+                >
+                  No, keep current plan
+                </Button>
+                <Button
+                  variant="destructive"
+                  disabled={isCanceling}
+                  onClick={async () => {
+                    setShowCancelDialog(false);
+                    if (!selectedPlanId) return;
+
+                    const res = await fetch("/api/cancel-subscription", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ userId: user?.id }),
+                      credentials: "include",
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                      toast.success("Subscription canceled. You're now on the Free plan.");
+                      window.location.reload();
+                    } else {
+                      toast.error(data?.error || "Failed to cancel subscription.");
+                    }
+                  }}
+                >
+                  {isCanceling ? "Canceling..." : "Yes, cancel plan"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

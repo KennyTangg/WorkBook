@@ -10,6 +10,7 @@ import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { comingSoon } from "@/utils/helpers";
+import Link from "next/link";
 
 export function NavUser({ user }: {
   user: {
@@ -17,6 +18,7 @@ export function NavUser({ user }: {
     name: string;
     email: string;
     avatar: string | null;
+    plan: string;
   };
 }) {
   const { isMobile } = useSidebar();
@@ -25,6 +27,7 @@ export function NavUser({ user }: {
   const router = useRouter();
   const displayName = user.name?.trim() || "Anonymous";
   const displayEmail = user.email?.trim() || "No email";
+  const displayPlan = user.plan[0].toUpperCase() + user.plan.slice(1);
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
@@ -79,7 +82,11 @@ export function NavUser({ user }: {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{displayName}</span>
-                  <span className="truncate text-xs">{displayEmail}</span>
+                  <span className="truncate text-xs flex items-center gap-1">
+                    Pricing Plan : 
+                    <span className="font-medium">{displayPlan}</span>
+                    <Sparkles className="size-3 text-foreground" /> 
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -87,18 +94,16 @@ export function NavUser({ user }: {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={comingSoon}>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
               <DropdownMenuItem  onClick={comingSoon}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem  onClick={comingSoon}>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
+              <Link href='/pricing' passHref prefetch>
+                <DropdownMenuItem>
+                  <CreditCard />
+                  Pricing
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuItem  onClick={comingSoon}>
                 <Bell />
                 Notifications

@@ -50,15 +50,23 @@ const AITools = ({ blocks }: AIToolsProps) => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<SummaryResult | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({ minHeight: 48, maxHeight: 164 });
 
   const pageContent = blocks.map((b) => b.content).join("\n");
 
   const handleSummary = async () => {
     setLoading(true);
+    setErrorMessage(null);
     try {
       const data = await generatePageSummary(pageContent);
       setResult(data);
+    } catch (err: any) {
+    if (err?.type === "rate_limit" || err.message?.includes("Rate limit exceeded")) {
+      setErrorMessage("You've hit the AI usage limit. Please try again later.");
+    } else {
+      setErrorMessage("Something went wrong while generating the summary.");
+    }
     } finally {
       setLoading(false);
     }
@@ -66,6 +74,7 @@ const AITools = ({ blocks }: AIToolsProps) => {
 
   const handleActions = async () => {
     setLoading(true);
+    setErrorMessage(null);
     try {
       const data = await extractActionItems(pageContent);
       const hasItems = Array.isArray(data) && data.length > 0;
@@ -76,6 +85,12 @@ const AITools = ({ blocks }: AIToolsProps) => {
           : "No actionable items were found from the page content.",
         key_points: hasItems ? data : ["Try rephrasing the content or asking a different question."],
       });
+    } catch (err: any) {
+      if (err?.type === "rate_limit" || err.message?.includes("Rate limit exceeded")) {
+        setErrorMessage("You've hit the AI usage limit. Please try again later.");
+      } else {
+        setErrorMessage("Something went wrong while generating the summary.");
+      }
     } finally {
       setLoading(false);
     }
@@ -83,6 +98,7 @@ const AITools = ({ blocks }: AIToolsProps) => {
 
   const handleQnA = async () => {
     setLoading(true);
+    setErrorMessage(null);
     try {
       const data = await askPageQuestion(pageContent, value);
       setResult({
@@ -92,6 +108,12 @@ const AITools = ({ blocks }: AIToolsProps) => {
       });
       setValue("");
       adjustHeight(true);
+    } catch (err: any) {
+      if (err?.type === "rate_limit" || err.message?.includes("Rate limit exceeded")) {
+        setErrorMessage("You've hit the AI usage limit. Please try again later.");
+      } else {
+        setErrorMessage("Something went wrong while generating the summary.");
+      }
     } finally {
       setLoading(false);
     }
@@ -130,6 +152,11 @@ const AITools = ({ blocks }: AIToolsProps) => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
+                {errorMessage && (
+                  <div className="text-sm text-red-500 bg-red-100 dark:bg-red-900/20 rounded p-3">
+                    {errorMessage}
+                  </div>
+                )}
                 {loading ? (
                     <div className="flex items-center gap-2 text-muted-foreground text-sm">
                         <motion.div

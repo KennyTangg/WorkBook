@@ -4,6 +4,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { PAGE_SUMMARY_PROMPT } from "@/lib/prompts/page-summary";
 import { EXTRACT_ACTIONS_PROMPT } from "@/lib/prompts/extract-actions";
 import { QNA_PAGE_PROMPT } from "@/lib/prompts/qna-page";
+import { createClient } from "@/utils/supabase/server";
+import checkAndUpdateRateLimit  from "@/utils/checkRateLimit";
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
@@ -22,6 +24,16 @@ function cleanAIResponse(text: string) {
 }
 
 export async function generatePageSummary(content: string) {
+  const supabase = createClient();
+  const { data: { user }} = await supabase.auth.getUser();
+  const { allowed } = await checkAndUpdateRateLimit(user?.id || "anonymous");
+
+  if (!allowed) {
+    const error = new Error("Rate limit exceeded");
+    (error as any).type = "rate_limit";
+    throw error;
+  }
+
   const prompt = PAGE_SUMMARY_PROMPT.replace("{content}", content);
   const result = await model.generateContent(prompt);
   const raw = result.response.text().trim();
@@ -37,6 +49,16 @@ export async function generatePageSummary(content: string) {
 }
 
 export async function extractActionItems(content: string) {
+  const supabase = createClient();
+  const { data: { user }} = await supabase.auth.getUser();
+  const { allowed } = await checkAndUpdateRateLimit(user?.id || "anonymous");
+
+  if (!allowed) {
+    const error = new Error("Rate limit exceeded");
+    (error as any).type = "rate_limit";
+    throw error;
+  }
+
   const prompt = EXTRACT_ACTIONS_PROMPT.replace("{content}", content);
   const result = await model.generateContent(prompt);
   const raw = result.response.text().trim();
@@ -52,6 +74,16 @@ export async function extractActionItems(content: string) {
 }
 
 export async function askPageQuestion(content: string, question: string) {
+  const supabase = createClient();
+  const { data: { user }} = await supabase.auth.getUser();
+  const { allowed } = await checkAndUpdateRateLimit(user?.id || "anonymous");
+
+  if (!allowed) {
+    const error = new Error("Rate limit exceeded");
+    (error as any).type = "rate_limit";
+    throw error;
+  }
+
   const prompt = QNA_PAGE_PROMPT
     .replace("{content}", content)
     .replace("{question}", question);

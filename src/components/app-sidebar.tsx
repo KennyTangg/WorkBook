@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Frame, GalleryVerticalEnd, Home, Search, Settings, SquarePen } from "lucide-react";
+import { Frame, GalleryVerticalEnd, Home, LayoutPanelTop, Search, Settings, SquarePen } from "lucide-react";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -18,6 +18,7 @@ export function AppSidebar({ user, pages, ...props } : {
     name: string;
     email: string;
     avatar: string | null;
+    plan: string;
   };
     pages: {
     id: string;
@@ -77,8 +78,12 @@ export function AppSidebar({ user, pages, ...props } : {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarMenu>
             <SidebarMenuItem>
+              <SidebarMenuButton className="hover:cursor-pointer" onClick={comingSoon}>
+                  <LayoutPanelTop />
+                  <span>Templates</span>
+              </SidebarMenuButton>
               <Link href={"/dashboard/settings"} passHref>
-              <SidebarMenuButton className="hover:cursor-pointer" tooltip="Manage your account and settings">
+              <SidebarMenuButton className="hover:cursor-pointer">
                   <Settings />
                   <span>Settings</span>
               </SidebarMenuButton>

@@ -11,33 +11,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { KeyFeatureProps, TrustMetricsProps } from "@/types";
 import { motion, Variants } from "framer-motion";
 import { useRef } from "react";
-
-const testimonials = [
-  {
-    quote: "From academic research to daily to-do lists, WorkBook handles it all. The ability to link notes to my schedule and search everything instantly means no idea ever gets lost.",
-    name: "David Kim",
-    title: "University Researcher",
-    image: "/testimony1_image.jpg"
-  },
-  {
-    quote: "WorkBook has been a game-changer for my scattered thoughts. Everything is so neatly organized now, and I finally feel in control of my projects. The customizable dashboard is a lifesaver!",
-    name: "Aisha Rahman",
-    title: "Marketing Manager",
-    image: "/testimony2_image.jpg" 
-  },
-  {
-    quote: "I used to jump between three different apps for notes and scheduling. WorkBook brought it all together seamlessly. My productivity has genuinely soared, and I'm hitting deadlines with ease.",
-    name: "Ben Carter",
-    title: "Software Developer",
-    image: "/testimony3_image.jpg" 
-  },
-  {
-    quote: "The clean interface and intuitive features make WorkBook a joy to use. It's transformed how I manage my freelance clients and personal tasks. Simple, yet incredibly powerful.",
-    name: "Chloe Lee",
-    title: "Freelance Photographer",
-    image: "/testimony4_image.jpg" 
-  }
-];
+import { testimonials } from "@/lib/constants";
 
 const titleAnimationVariants: Variants = {
   hidden: { opacity: 0, y: 100 },
@@ -117,7 +91,7 @@ const HomePage = () => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.5 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-b from-foreground to-foreground/30 bg-clip-text text-transparent text-center mb-4">Unlock Your Potential with WorkBook</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold text-foreground text-center mb-4">Unlock Your Potential with WorkBook</h2>
           <p className="text-base sm:text-lg text-muted-foreground text-center max-w-2xl mx-auto mb-12 md:mb-20">WorkBook provides powerful tools to streamline your workflow and keep everything in one place.</p>
         </motion.div>
         <motion.div 
