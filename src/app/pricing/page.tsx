@@ -4,9 +4,16 @@ import { getUser } from '@/lib/getUser';
 
 const Pricing = async () => {
   const user = await getUser();
-  const { profile } = await getDashboardData(user.id);
+  
+  if (!user) {
+    return <SimplePricing user={null} currentPlan={null} />;
+  }
 
-  return <SimplePricing user={user} currentPlan={profile.subscription_tier} />;
+  const [dashboard] = await Promise.all([
+    getDashboardData(user.id),
+  ]);
+
+  return <SimplePricing user={user} currentPlan={dashboard.profile.subscription_tier} />;
 }
 
 export default Pricing;

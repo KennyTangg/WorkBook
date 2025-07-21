@@ -55,6 +55,30 @@ export interface HomePage extends Page {
   updated_at: string;
 }
 
+export interface HomeContentProps {
+  pages: HomePage[];
+  userId: {
+    id: string;
+    username: string;
+  };
+}
+
+export type EditorProps = { 
+  page: Page; 
+  blocks: Block[]; 
+  profile: {
+      subscription_tier?: string;
+      daily_call_count?: number;
+  }};
+
+export interface AIToolsProps {
+  blocks: Block[];
+  profile: {
+    subscription_tier?: string;
+    daily_call_count?: number;
+  };
+}
+
 export interface SupabaseUser {
   id: string;
   email: string | null;
@@ -67,4 +91,6 @@ export interface SupabaseUser {
 export interface UserProfile {
   id: string;
   username?: string;
+  subscription_tier?: string;
+  daily_call_count?: number;
 }

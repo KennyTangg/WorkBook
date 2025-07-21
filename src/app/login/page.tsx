@@ -13,7 +13,6 @@ import { ArrowLeft } from "lucide-react";
 import { useAuthToast } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/components/ui/Logo";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -75,7 +74,7 @@ const LoginPage = () => {
                 />
             </div>
             <div className="w-full max-w-md mx-auto lg:mx-0">
-                <Logo className="relative bottom-10 text-center text-2xl hover:opacity-100"/>
+                <h1 className="font-light relative bottom-10 text-center text-2xl select-none"> WorkBook </h1>
                 <Card className="w-full h-auto lg:max-w-sm justify-center shadow-md bg-transparent border-0 sm:border sm:bg-card">
                     <CardHeader className="px-4 sm:px-6">
                         <CardTitle className="sm:text-xl">Login to your account</CardTitle>

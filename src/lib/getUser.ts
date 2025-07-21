@@ -1,12 +1,10 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { redirect } from "next/navigation";
+import { cache } from "react";
 
-export async function getUser() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+export const getUser = cache(async () => {
+    const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) redirect("/");
-
-  return user;
-}
+    return user ?? null;
+});

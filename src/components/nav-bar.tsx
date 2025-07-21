@@ -9,10 +9,10 @@ const NavBar = () => {
             <Logo />
             <div className="flex gap-x-4">
                 <ModeToggle />
-                <Link href={"/login"} prefetch passHref>
+                <Link href={"/login"} prefetch passHref className="hidden sm:block">
                     <Button variant="default" className="hidden sm:block">Login</Button>
                 </Link>
-                <Link href={"/register"} prefetch passHref>
+                <Link href={"/register"} prefetch passHref className="hidden sm:block">
                     <Button variant="ghost" className="hidden sm:block">Sign Up</Button>
                 </Link>
             </div>

@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { generatePageSummary, extractActionItems, askPageQuestion } from "@/actions/ai-actions";
 import AIResultOutput, { SummaryResult } from "./ai-result";
-import { Block } from "@/types";
+import { AIToolsProps } from "@/types";
 
 function useAutoResizeTextarea({ minHeight, maxHeight }: { minHeight: number; maxHeight?: number }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -41,19 +41,42 @@ function useAutoResizeTextarea({ minHeight, maxHeight }: { minHeight: number; ma
   return { textareaRef, adjustHeight };
 }
 
-interface AIToolsProps {
-  blocks: Block[];
+function isRateLimitError(err: unknown): err is { message: string } {
+  if (
+    typeof err === "object" &&
+    err !== null &&
+    "message" in err
+  ) {
+    const typedErr = err as { message: unknown };
+    return typeof typedErr.message === "string" &&
+           typedErr.message.includes("Rate limit exceeded");
+  }
+  return false;
 }
 
-const AITools = ({ blocks }: AIToolsProps) => {
+const AITools = ({ blocks, profile }: AIToolsProps) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<SummaryResult | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({ minHeight: 48, maxHeight: 164 });
-
   const pageContent = blocks.map((b) => b.content).join("\n");
+  
+  const rateLimits: Record<string, number | null> = { free: 2, pro: 4, creator: null};
+  const tier = profile.subscription_tier ?? "unknown";
+  const limit = rateLimits[tier] ?? 0;
+  const usage = profile.daily_call_count ?? 0;
+
+  const hasRemainingCalls = useCallback(() => {
+    return limit === null || usage < limit;
+  }, [limit, usage]);
+  
+  useEffect(() => {
+    if (!hasRemainingCalls()) {
+      setErrorMessage("You've hit your daily AI limit. Upgrade your plan for more usage.");
+    }
+  }, [hasRemainingCalls]);
 
   const handleSummary = async () => {
     setLoading(true);
@@ -61,12 +84,12 @@ const AITools = ({ blocks }: AIToolsProps) => {
     try {
       const data = await generatePageSummary(pageContent);
       setResult(data);
-    } catch (err: any) {
-    if (err?.type === "rate_limit" || err.message?.includes("Rate limit exceeded")) {
-      setErrorMessage("You've hit the AI usage limit. Please try again later.");
-    } else {
-      setErrorMessage("Something went wrong while generating the summary.");
-    }
+    } catch (err: unknown) {
+      if (isRateLimitError(err)) {
+        setErrorMessage("You've hit the AI usage limit. Please try again later.");
+      } else {
+        setErrorMessage("Something went wrong.");
+      }
     } finally {
       setLoading(false);
     }
@@ -85,11 +108,11 @@ const AITools = ({ blocks }: AIToolsProps) => {
           : "No actionable items were found from the page content.",
         key_points: hasItems ? data : ["Try rephrasing the content or asking a different question."],
       });
-    } catch (err: any) {
-      if (err?.type === "rate_limit" || err.message?.includes("Rate limit exceeded")) {
+    } catch (err: unknown) {
+      if (isRateLimitError(err)) {
         setErrorMessage("You've hit the AI usage limit. Please try again later.");
       } else {
-        setErrorMessage("Something went wrong while generating the summary.");
+        setErrorMessage("Something went wrong.");
       }
     } finally {
       setLoading(false);
@@ -108,11 +131,11 @@ const AITools = ({ blocks }: AIToolsProps) => {
       });
       setValue("");
       adjustHeight(true);
-    } catch (err: any) {
-      if (err?.type === "rate_limit" || err.message?.includes("Rate limit exceeded")) {
+    } catch (err: unknown) {
+      if (isRateLimitError(err)) {
         setErrorMessage("You've hit the AI usage limit. Please try again later.");
       } else {
-        setErrorMessage("Something went wrong while generating the summary.");
+        setErrorMessage("Something went wrong.");
       }
     } finally {
       setLoading(false);
@@ -170,7 +193,7 @@ const AITools = ({ blocks }: AIToolsProps) => {
                     <AIResultOutput result={result} />
                 )}
 
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="flex gap-2 mt-2 items-center">
                     <button 
                         onClick={handleSummary}
                         disabled={loading}
@@ -185,6 +208,9 @@ const AITools = ({ blocks }: AIToolsProps) => {
                     >
                     <CheckCircle className="size-4 text-primary" /> Actions
                     </button>
+                    <h1 className="text-sm text-muted-foreground ml-auto">
+                      {limit === null ? '' : `${usage}/${limit} AI calls `}
+                    </h1>
                 </div>
 
                 <div className="relative border rounded-2xl bg-neutral-100 dark:bg-neutral-800 p-1">

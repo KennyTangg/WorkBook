@@ -29,8 +29,8 @@ export async function generatePageSummary(content: string) {
   const { allowed } = await checkAndUpdateRateLimit(user?.id || "anonymous");
 
   if (!allowed) {
-    const error = new Error("Rate limit exceeded");
-    (error as any).type = "rate_limit";
+    const error = new Error("Rate limit exceeded") as Error & { type?: string };
+    error.type = "rate_limit";
     throw error;
   }
 
@@ -54,8 +54,8 @@ export async function extractActionItems(content: string) {
   const { allowed } = await checkAndUpdateRateLimit(user?.id || "anonymous");
 
   if (!allowed) {
-    const error = new Error("Rate limit exceeded");
-    (error as any).type = "rate_limit";
+    const error = new Error("Rate limit exceeded") as Error & { type?: string };
+    error.type = "rate_limit";
     throw error;
   }
 
@@ -79,8 +79,8 @@ export async function askPageQuestion(content: string, question: string) {
   const { allowed } = await checkAndUpdateRateLimit(user?.id || "anonymous");
 
   if (!allowed) {
-    const error = new Error("Rate limit exceeded");
-    (error as any).type = "rate_limit";
+    const error = new Error("Rate limit exceeded") as Error & { type?: string };
+    error.type = "rate_limit";
     throw error;
   }
 

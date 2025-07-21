@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { Sparkles, ArrowRight, Check, ArrowLeft } from 'lucide-react';
+import { Sparkles, ArrowRight, Check, ArrowLeft, Loader } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { User } from "@supabase/supabase-js";
@@ -19,10 +19,11 @@ export default function SimplePricing({ user, currentPlan } : {
   user: User | null,
   currentPlan: string | null
  }) {
-  const [frequency, setFrequency] = useState<string>('monthly');
+  const [frequency, setFrequency] = useState('monthly');
   const [isCanceling, setIsCanceling] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(false);
   const router = useRouter();
 
@@ -33,9 +34,8 @@ export default function SimplePricing({ user, currentPlan } : {
   if (!mounted) return null;
 
   const handlePlanSelect = async (planId: string) => {
-    console.log(currentPlan);
     if (!user) {
-      window.location.href = '/login';
+      router.push('/login');
       return;
     }
 
@@ -86,13 +86,16 @@ export default function SimplePricing({ user, currentPlan } : {
         <div className="absolute -bottom-[10%] -right-[10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-[10%] -left-[10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-3xl" />
       </div>
-      <button
-            onClick={() => router.push("/dashboard")}
-            className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-muted-foreground hover:text-foreground transition-all hover:cursor-pointer"
+        <button
+          onClick={() => {
+            setLoading(true);
+            router.push("/");
+          }}
+          disabled={loading}
+          className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-foreground transition-all hover:cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         >
-            <ArrowLeft className="size-4 sm:size-5" /> Back
-      </button>
-
+          {loading ? <><Loader className="size-4 sm:size-5 animate-spin" /> Redirecting...</> : <><ArrowLeft className="size-4 sm:size-5" /> Back</>}
+        </button>
       <div className="flex flex-col items-center justify-center gap-8">
         <div className="flex flex-col items-center space-y-2">
           <Badge
@@ -106,7 +109,7 @@ export default function SimplePricing({ user, currentPlan } : {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-foreground text-4xl font-bold sm:text-5xl"
+            className="text-foreground text-3xl font-bold sm:text-5xl"
           >
             Pick the perfect plan for your needs
           </motion.h1>
@@ -114,7 +117,7 @@ export default function SimplePricing({ user, currentPlan } : {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="max-w-md pt-2 text-lg text-muted-foreground"
+            className="max-w-md pt-2 sm:text-lg text-muted-foreground"
           >
             Simple, transparent pricing that scales with your business. No
             hidden fees, no surprises.
@@ -285,8 +288,11 @@ export default function SimplePricing({ user, currentPlan } : {
                         : 'hover:border-primary/30 hover:bg-primary/5 hover:text-primary',
                     )}
                   >
-                    {plan.cta}
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    {!user ? (
+                      <> {plan.cta} <span className="ml-2 text-xs">(Login required)</span> </>
+                    ) : (
+                      <> {plan.cta} <ArrowRight className="ml-2 h-4 w-4" /> </>
+                    )}
                   </Button>
                 </CardFooter>
 
@@ -322,22 +328,29 @@ export default function SimplePricing({ user, currentPlan } : {
                   variant="destructive"
                   disabled={isCanceling}
                   onClick={async () => {
-                    setShowCancelDialog(false);
-                    if (!selectedPlanId) return;
+                    setIsCanceling(true);
+                    try {
+                      setShowCancelDialog(false);
+                      if (!selectedPlanId) return;
 
-                    const res = await fetch("/api/cancel-subscription", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ userId: user?.id }),
-                      credentials: "include",
-                    });
+                      const res = await fetch("/api/cancel-subscription", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ userId: user?.id }),
+                        credentials: "include",
+                      });
 
-                    const data = await res.json();
-                    if (res.ok) {
-                      toast.success("Subscription canceled. You're now on the Free plan.");
-                      window.location.reload();
-                    } else {
-                      toast.error(data?.error || "Failed to cancel subscription.");
+                      const data = await res.json();
+                      if (res.ok) {
+                        toast.success("Subscription canceled. You're now on the Free plan.");
+                        router.push('/dashboard')
+                      } else {
+                        toast.error(data?.error || "Failed to cancel subscription.");
+                      }
+                    } catch {
+                      toast.error("Unexpected error while canceling.");
+                    } finally {
+                      setIsCanceling(false);
                     }
                   }}
                 >

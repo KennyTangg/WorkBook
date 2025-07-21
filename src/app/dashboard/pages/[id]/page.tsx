@@ -9,5 +9,5 @@ export default async function Page({ params }: { params: { id: string } }) {
   
   if (!data) return notFound();
 
-  return <Editor page={data.page} blocks={data.blocks} />;
+  return <Editor profile={data.profile} page={data.page} blocks={data.blocks} />;
 }

@@ -2,24 +2,13 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { HomePage } from "@/types";
+import { HomeContentProps } from "@/types";
 import { comingSoon } from "@/utils/helpers";
 import { useTransition } from "react";
 import { createNewPage } from "@/actions/create-page";
 import { useRouter } from "next/navigation";
 
-interface HomeContentProps {
-  pages: HomePage[];
-  userId: {
-    id: string;
-    username: string;
-  };
-}
-
-export default function HomeContent({
-  pages,
-  userId
-}: HomeContentProps) {
+export default function HomeContent({ pages, userId }: HomeContentProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 

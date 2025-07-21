@@ -1,5 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
+import { createClient } from "./utils/supabase/server";
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next({
@@ -8,30 +8,14 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            response.cookies.set(name, value)
-          );
-        },
-      },
-    }
-  );
-  
+  const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
   const pathname = request.nextUrl.pathname;
   const guestOnlyRoutes = ["/" ,"/login", "/register"];
   const hybridRoutes = ["/pricing", "/auth/callback", "/api/checkout", "/api/webhook", "/api/cancel-subscription"]; 
   const isGuestOnly = guestOnlyRoutes.includes(pathname);
   const isHybrid = hybridRoutes.includes(pathname);
-
+  
   // if (!session && request.cookies.has("sb:token")) {
   //   console.log("Clearing cookies...");
   //   const response = NextResponse.redirect(new URL("/login", request.url));
@@ -42,7 +26,11 @@ export async function middleware(request: NextRequest) {
   //   return response;
   // }
 
-  if (!session && !isHybrid && !isGuestOnly) {
+  if (!session) {
+    if (isGuestOnly || isHybrid) {
+      return response;
+    }
+
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

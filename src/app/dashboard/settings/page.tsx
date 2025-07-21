@@ -1,37 +1,13 @@
-import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import ClientSettings from "@/components/settings-theme";
+import { getSettingsData } from "@/lib/getSettings";
 
 export default async function SettingsPage() {
-  const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { user } = await getSettingsData();
 
   if (!user) {
     redirect("/");
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  const provider = user.app_metadata?.provider ?? 'email';
-  const userData = {
-    id: user.id,
-    email: user.email ?? "",
-    username:
-      profile?.username ||
-      user.user_metadata?.username ||
-      user.user_metadata?.full_name ||
-      user.email?.split("@")[0] ||
-      "Anonymous",
-    hasPassword: provider === 'email'
-  };
-
-  return (
-    <>
-      <ClientSettings user={userData} />
-    </>
-  );
+  return <ClientSettings user={user} />;
 }

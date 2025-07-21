@@ -10,7 +10,7 @@ export interface HomeData {
   pages: HomePage[];
 }
 
-export async function getHomeData(): Promise<HomeData> {
+export async function getHomeData() {
   const supabase = createClient();
 
   const {

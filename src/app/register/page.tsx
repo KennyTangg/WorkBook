@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import Logo from "@/components/ui/Logo";
 import { supabase } from "@/utils/supabase/client";
 import { signInWithGoogle } from "@/utils/actions";
 import { useAuthToast } from "@/utils/helpers";
@@ -67,7 +66,7 @@ const RegisterPage = () => {
         </button>
         <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 items-center gap-8 lg:gap-12">
             <div className="w-full max-w-md mx-auto lg:mx-0">
-                <Logo className="relative bottom-10 text-center text-2xl hover:opacity-100"/>
+                <h1 className="font-light relative bottom-10 text-center text-2xl select-none"> WorkBook </h1>
                 <Card className=" w-full h-7/12 lg:max-w-sm justify-center shadow-md bg-transparent border-0 sm:border sm:bg-card">
                     <CardHeader className="px-3 sm:px-6">
                         <CardTitle className="sm:text-xl">Create your account</CardTitle>

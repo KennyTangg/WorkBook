@@ -24,6 +24,7 @@ export function NavUser({ user }: {
   const { isMobile } = useSidebar();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoadingPricing, setIsLoadingPricing] = useState(false);
   const router = useRouter();
   const displayName = user.name?.trim() || "Anonymous";
   const displayEmail = user.email?.trim() || "No email";
@@ -85,7 +86,7 @@ export function NavUser({ user }: {
                   <span className="truncate text-xs flex items-center gap-1">
                     Pricing Plan : 
                     <span className="font-medium">{displayPlan}</span>
-                    <Sparkles className="size-3 text-foreground" /> 
+                    <Sparkles className="size-3 stroke-1" /> 
                   </span>
                 </div>
               </div>
@@ -98,10 +99,16 @@ export function NavUser({ user }: {
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <Link href='/pricing' passHref prefetch>
-                <DropdownMenuItem>
-                  <CreditCard />
-                  Pricing
+              <Link href='/pricing' passHref>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setIsLoadingPricing(true);
+                    router.push("/pricing");
+                  }}
+                  disabled={isLoadingPricing}
+                >
+                  <CreditCard className={isLoadingPricing ? "animate-spin" : ""} />
+                  {isLoadingPricing ? "Redirecting..." : "Pricing"}
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuItem  onClick={comingSoon}>
@@ -116,6 +123,15 @@ export function NavUser({ user }: {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        
+        {isLoadingPricing && (
+          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+            <div className="bg-white dark:bg-zinc-900 px-8 py-4 rounded-lg flex items-center gap-4">
+              <CreditCard className="animate-spin size-4 sm:size-5" />
+              <span className="font-medium text-md" >Redirecting to pricing...</span>
+            </div>
+          </div>
+        )}
 
         <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
           <DialogContent>

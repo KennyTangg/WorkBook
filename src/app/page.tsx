@@ -3,7 +3,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import NavBar from "@/components/nav-bar";
-import Logo from "@/components/ui/Logo";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Calendar, Clock, FileText, LayoutDashboard, LayoutPanelTop, Quote, Search, TrendingUp } from "lucide-react";
@@ -195,9 +194,14 @@ const HomePage = () => {
           <div className="space-y-6 text-center lg:text-left">
             <h1 className="font-bold text-lg sm:text-2xl mb-2 sm:mb-6">Ready to get started?</h1>
             <p className="max-w-lg text-sm sm:text-lg text-muted-foreground mx-auto lg:mx-0">Create an account instantly to get started or contact us to manage a custom workspace for your workbook.</p>
+            <div className="flex flex-col sm:flex-row gap-4">
             <Link href={"/register"} passHref prefetch>
               <Button size="lg" className="w-full sm:w-auto">Start Now</Button>
             </Link>
+            <Link href={"/pricing"} passHref prefetch>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto text-primary hover:text-primary">Check Pricing</Button>
+            </Link>
+            </div>
           </div>
           <motion.div className="w-12 h-12 mb-12 lg:mb-0 lg:w-28 lg:h-28 shadow-md bg-primary rounded-lg mx-auto " 
             animate={{scale: [1, 2, 2, 1], rotate: [0, 90, 90, 0], borderRadius: ["10%", "10%", "50%", "10%"]}}
@@ -207,7 +211,7 @@ const HomePage = () => {
       </section>
       <footer className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 my-8 flex flex-col sm:flex-row justify-between items-center sm:items-start mx-auto gap-4 sm:gap-0">
         <div className="space-y-1 text-center sm:text-left">
-          <Logo />
+          <h1 className="font-light text-xl sm:text-2xl select-none"> WorkBook </h1>
           <h1 className="text-muted-foreground text-sm">© 2025 · Kenny Tang · All rights reserved</h1>
         </div>
         <div className="text-center sm:text-right space-y-1">

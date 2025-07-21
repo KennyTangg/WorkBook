@@ -1,10 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { Frame, GalleryVerticalEnd, Home, LayoutPanelTop, Search, Settings, SquarePen } from "lucide-react";
+import { Frame, Home, LayoutPanelTop, Search, Settings, SquarePen } from "lucide-react";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
-import { TeamSwitcher } from "@/components/team-switcher";
+import { LogoSidebar } from "@/components/logo-sidebar";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -34,19 +34,11 @@ export function AppSidebar({ user, pages, ...props } : {
       router.push(`/dashboard/pages/${page.id}`);
     });
   };
-
-  const teams = [
-    {
-      name: "WorkBook Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-  ];
-
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={teams} />
+        <LogoSidebar />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">

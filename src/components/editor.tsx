@@ -7,15 +7,14 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, Pencil, Plus, Trash2 } from "lucide-react";
-import { Block, BlockComponentProps, Page } from "@/types";
+import { Block, BlockComponentProps, EditorProps } from "@/types";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { DragDropContext, Droppable, Draggable, DropResult } from "@hello-pangea/dnd";
 import AITools from "./ai-tools";
+import { toast } from "sonner";
 
-type EditorProps = { page: Page; blocks: Block[] };
-
-export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
+export default function Editor({ page, blocks: initialBlocks, profile }: EditorProps) {
   const [blocks, setBlocks] = useState<Block[]>(initialBlocks);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState(page.title || "Untitled");
@@ -139,7 +138,9 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
           )}
       </header>
       <hr className="mt-4 border-b-1 rounded-lg border-muted-foreground" />
-      <AITools blocks={blocks} />
+
+      <AITools blocks={blocks} profile={profile} />
+
       {isReordering ? (
         <DragDropContext onDragEnd={handleDragEnd}>
           <Droppable droppableId="blocks">
@@ -230,7 +231,16 @@ export default function Editor({ page, blocks: initialBlocks }: EditorProps) {
           </DialogContent>
         </Dialog>
 
-        <Button variant="outline" onClick={() => setIsReordering(!isReordering)} >
+        <Button
+          variant="outline"
+          onClick={() => {
+            if (profile.subscription_tier === "free") {
+              toast.warning("Reorder is only available for Pro and Creator plans.");
+              return;
+            }
+            setIsReordering(!isReordering);
+          }}
+        >
           {isReordering ? "Stop Reordering" : "Reorder Blocks"}
         </Button>
       </div>
