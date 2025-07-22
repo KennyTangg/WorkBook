@@ -37,7 +37,7 @@ This project was built to deepen my practical skills in:
 ![Authentication](public/screenshots/authentication-page.png)
 ![Dashboard](public/screenshots/dashboard-page.png)
 ![Block Editor](public/screenshots/block-editor.png)
-![Pricing](public/screenshots/pricing-image.png)
+![Pricing](public/screenshots/pricing-page.png)
 ![Settings](public/screenshots/settings-page.png)
 
 ---
