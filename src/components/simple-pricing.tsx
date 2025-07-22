@@ -80,7 +80,7 @@ export default function SimplePricing({ user, currentPlan } : {
   };
   
   return (
-    <div className="not-prose relative flex w-full flex-col gap-16 overflow-hidden px-4 py-24 text-center sm:px-8">
+    <div className="not-prose relative flex w-full flex-col gap-16 overflow-hidden px-6 py-10 text-center sm:px-8">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-[10%] left-[50%] h-[40%] w-[60%] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-[10%] -right-[10%] h-[40%] w-[40%] rounded-full bg-primary/5 blur-3xl" />
@@ -94,7 +94,7 @@ export default function SimplePricing({ user, currentPlan } : {
           disabled={loading}
           className="absolute top-8 left-10 flex items-center gap-1 text-base sm:text-lg text-foreground transition-all hover:cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          {loading ? <><Loader className="size-4 sm:size-5 animate-spin" /> Redirecting...</> : <><ArrowLeft className="size-4 sm:size-5" /> Back</>}
+          {loading ? <><Loader className="size-4 sm:size-5 animate-spin" /> <p className='hidden sm:block'>Redirecting...</p></> : <><ArrowLeft className="size-4 sm:size-5" /><p className='hidden sm:block'>Back</p></>}
         </button>
       <div className="flex flex-col items-center justify-center gap-8">
         <div className="flex flex-col items-center space-y-2">

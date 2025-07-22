@@ -35,6 +35,7 @@ This project was built to deepen my practical skills in:
 ![Authentication](public/screenshots/authentication-page.png)
 ![Dashboard](public/screenshots/dashboard-page.png)
 ![Block Editor](public/screenshots/block-editor.png)
+![Pricing](public/screenshots/pricing-page.png)
 ![Settings](public/screenshots/settings-page.png)
 
 ---
@@ -50,6 +51,7 @@ This project was built to deepen my practical skills in:
 | **UI Library** | Custom + Shadcn UI Components |
 | **Deployment** | Vercel |
 | **AI Integration** | Gemini API (for page summarization, Q&A, and action extraction) |
+| **Payments** | Stripe (Test Mode) |
 
 ---
 
@@ -77,6 +79,10 @@ This project was built to deepen my practical skills in:
 │   │   ├── create-page.ts
 │   │   └── delete-page.ts
 │   ├── app
+│   │   ├── api
+│   │   │   ├── checkout
+│   │   │   ├── webhook
+│   │   │   └── cancel-subscription
 │   │   ├── auth
 │   │   │   └── callback
 │   │   ├── dashboard
@@ -91,6 +97,8 @@ This project was built to deepen my practical skills in:
 │   │   │   │   └── page.tsx
 │   │   │   ├── page.tsx
 │   │   │   └── layout.tsx
+│   │   ├── pricing
+│   │   │   └── page.tsx
 │   │   ├── login
 │   │   │   ├── loading.tsx
 │   │   │   └── page.tsx
@@ -111,15 +119,17 @@ This project was built to deepen my practical skills in:
 │   │   ├── dashboard-layout.tsx
 │   │   ├── editor.tsx
 │   │   ├── home-content.tsx
+│   │   ├── logo-sidebar.tsx
 │   │   ├── nav-bar.tsx
 │   │   ├── nav-projects.tsx
 │   │   ├── nav-user.tsx
 │   │   ├── settings-theme.tsx
-│   │   ├── team-switcher.tsx
+│   │   ├── simple-pricing.tsx
 │   │   ├── theme-provider.tsx
 │   │   └── ui
 │   │       ├── Logo.tsx
 │   │       ├── avatar.tsx
+│   │       ├── badge.tsx
 │   │       ├── button.tsx
 │   │       ├── card.tsx
 │   │       ├── carousel.tsx
@@ -136,6 +146,8 @@ This project was built to deepen my practical skills in:
 │   │       ├── skeleton.tsx
 │   │       ├── sonner.tsx
 │   │       ├── switch.tsx
+│   │       ├── tabs.tsx
+│   │       ├── textarea.tsx
 │   │       └── tooltip.tsx
 │   ├── hooks
 │   │   └── use-mobile.ts
@@ -144,7 +156,9 @@ This project was built to deepen my practical skills in:
 │   │   │   ├── extract-actions.ts
 │   │   │   ├── page-summary.ts
 │   │   │   └── qna-page.ts
+│   │   ├── constants.ts
 │   │   ├── getUser.ts
+│   │   ├── getSettings.ts
 │   │   ├── getDashboardData.ts
 │   │   ├── getPageData.ts
 │   │   ├── getHomeData.ts
@@ -155,6 +169,7 @@ This project was built to deepen my practical skills in:
 │   └── utils
 │       ├── actions.ts
 │       ├── helpers.ts
+│       ├── checkRateLimit.ts
 │       └── supabase
 │           ├── client.ts
 │           └── server.ts
@@ -183,8 +198,18 @@ This project was built to deepen my practical skills in:
    npm install
 3. **Set up environment variables**
    ```bash
-    NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   # Supabase
+   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+   # Stripe (Test Mode)
+   STRIPE_SECRET_KEY=your-stripe-secret-key
+   STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
+   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
+
+   # Gemini AI
+   GOOGLE_API_KEY=your-gemini-api-key
 4. **Run locally**
    ```bash
     npm run dev
@@ -210,3 +235,12 @@ This project demonstrates:
 ✅ Clean project structure, type-safe components, and ESLint best practices
 
 ---
+
+## 💳 Payments Integration (Test Mode)
+
+**Stripe Checkout** has been integrated to allow subscription management (e.g., upgrading plans).  
+Currently, Stripe is running in **Test Mode**, so **real payments are not processed**.
+
+> ⚠️ This is a test environment. Use [Stripe test cards](https://stripe.com/docs/testing#international-cards) to simulate payments.
+
+Plans are managed via the `/pricing` page, and users can "subscribe" to different tiers.

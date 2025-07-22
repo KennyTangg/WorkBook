@@ -26,7 +26,9 @@ export function NavUser({ user }: {
   const router = useRouter();
   const displayName = user.name?.trim() || "Anonymous";
   const displayEmail = user.email?.trim() || "No email";
-  const displayPlan = user.plan[0].toUpperCase() + user.plan.slice(1);
+  const displayPlan = user.plan
+    ? user.plan[0].toUpperCase() + user.plan.slice(1)
+    : "Free"; 
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
