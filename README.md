@@ -1,6 +1,6 @@
 # 📓 WorkBook — Your Minimal Personal Workspace App
 
-> A simple, minimalistic, Notion-inspired web app to create, edit, and organize your ideas — built with **Next.js**, **Supabase**, and **Tailwind CSS**.
+> A simple, minimalistic, personal web app to create, edit, and organize your ideas — built with **Next.js**, **Supabase**, and **Tailwind CSS**. Inspired by tools like Notion, WorkBook emphasizes user experience, performance, and scalable design.
 
 ---
 
@@ -10,11 +10,13 @@
 It allows authenticated users to create and manage pages, add editable blocks (paragraphs, headings, to-dos), and securely store data in a Supabase PostgreSQL database.
 
 This project was built to deepen my practical skills in:
-- **Modern full-stack development** with Next.js 13 App Router (`app/` directory, server components, and server actions)
+- **Full-stack architecture** with Next.js 13 App Router (server components, server actions)
 - **Authentication & authorization** with Supabase Auth
 - **Relational data design** for user pages and content blocks
-- **UI/UX** design using Tailwind CSS and Framer Motion for subtle interactions
-- **Reusable component architecture** and server actions for robust feature development
+- **UI/UX design** using Tailwind CSS and Framer Motion
+- **Reusable, composable components** for scalable feature development
+- **Stripe integration** for subscription management and role-based access
+- **Gemini API integration** for AI-assisted workflows
 
 ---
 
@@ -35,7 +37,7 @@ This project was built to deepen my practical skills in:
 ![Authentication](public/screenshots/authentication-page.png)
 ![Dashboard](public/screenshots/dashboard-page.png)
 ![Block Editor](public/screenshots/block-editor.png)
-![Pricing](public/screenshots/pricing-page.png)
+![Pricing](public/screenshots/pricing-image.png)
 ![Settings](public/screenshots/settings-page.png)
 
 ---
