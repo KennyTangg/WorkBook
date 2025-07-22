@@ -3,14 +3,13 @@
 import { SidebarMenu, SidebarMenuItem, SidebarMenuButton, useSidebar } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuTrigger,DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ChevronsUpDown, Sparkles, BadgeCheck, CreditCard, Bell, LogOut } from "lucide-react";
+import { BadgeCheck, Bell, LogOut } from "lucide-react";
 import { Dialog,DialogContent, DialogHeader,  DialogTitle, DialogDescription, DialogFooter, DialogClose} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { comingSoon } from "@/utils/helpers";
-import Link from "next/link";
 
 export function NavUser({ user }: {
   user: {
@@ -24,7 +23,6 @@ export function NavUser({ user }: {
   const { isMobile } = useSidebar();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [isLoadingPricing, setIsLoadingPricing] = useState(false);
   const router = useRouter();
   const displayName = user.name?.trim() || "Anonymous";
   const displayEmail = user.email?.trim() || "No email";
@@ -58,9 +56,8 @@ export function NavUser({ user }: {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{displayName}</span>
-                <span className="truncate text-xs">{displayEmail}</span>
+                <span className="truncate text-xs text-muted-foreground">{displayPlan}</span>
               </div>
-              <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
 
@@ -83,11 +80,7 @@ export function NavUser({ user }: {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{displayName}</span>
-                  <span className="truncate text-xs flex items-center gap-1">
-                    Pricing Plan : 
-                    <span className="font-medium">{displayPlan}</span>
-                    <Sparkles className="size-3 stroke-1" /> 
-                  </span>
+                  <span className="truncate text-xs text-muted-foreground">{displayEmail}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -99,18 +92,6 @@ export function NavUser({ user }: {
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <Link href='/pricing' passHref>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setIsLoadingPricing(true);
-                    router.push("/pricing");
-                  }}
-                  disabled={isLoadingPricing}
-                >
-                  <CreditCard className={isLoadingPricing ? "animate-spin" : ""} />
-                  {isLoadingPricing ? "Redirecting..." : "Pricing"}
-                </DropdownMenuItem>
-              </Link>
               <DropdownMenuItem  onClick={comingSoon}>
                 <Bell />
                 Notifications
@@ -123,15 +104,6 @@ export function NavUser({ user }: {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        
-        {isLoadingPricing && (
-          <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-            <div className="bg-white dark:bg-zinc-900 px-8 py-4 rounded-lg flex items-center gap-4">
-              <CreditCard className="animate-spin size-4 sm:size-5" />
-              <span className="font-medium text-md" >Redirecting to pricing...</span>
-            </div>
-          </div>
-        )}
 
         <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
           <DialogContent>

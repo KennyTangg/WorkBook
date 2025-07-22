@@ -21,7 +21,7 @@ export default function HomeContent({ pages, userId }: HomeContentProps) {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start px-4 py-12">
+    <main className="min-h-screen flex flex-col items-center justify-start px-6 sm:px-4 py-12">
       <div className="flex flex-col items-center justify-center gap-3">
         <motion.div
           className="w-8 sm:w-10 shadow-md bg-primary aspect-square rounded-lg"

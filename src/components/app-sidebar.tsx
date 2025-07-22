@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Frame, Home, LayoutPanelTop, Search, Settings, SquarePen } from "lucide-react";
+import { CreditCard, Frame, Home, LayoutPanelTop, Search, Settings, SquarePen } from "lucide-react";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { LogoSidebar } from "@/components/logo-sidebar";
@@ -27,6 +27,7 @@ export function AppSidebar({ user, pages, ...props } : {
 } & React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const [isRedirect, startRedirect] = useTransition();
 
   const handleNewPage = async () => {
     startTransition(async () => {
@@ -74,11 +75,25 @@ export function AppSidebar({ user, pages, ...props } : {
                   <LayoutPanelTop />
                   <span>Templates</span>
               </SidebarMenuButton>
+              <Link href={"/pricing"} passHref>
+                <SidebarMenuButton
+                  className="hover:cursor-pointer"
+                  onClick={() => {
+                    startRedirect(() => {
+                      router.push("/pricing");
+                    });
+                  }}
+                  disabled={isRedirect}
+                >
+                  <CreditCard />
+                  <span>{isRedirect ? "Redirecting..." : "Pricing"}</span>
+                </SidebarMenuButton>
+              </Link>
               <Link href={"/dashboard/settings"} passHref>
-              <SidebarMenuButton className="hover:cursor-pointer">
-                  <Settings />
-                  <span>Settings</span>
-              </SidebarMenuButton>
+                <SidebarMenuButton className="hover:cursor-pointer">
+                    <Settings />
+                    <span>Settings</span>
+                </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>
           </SidebarMenu>

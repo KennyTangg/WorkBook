@@ -54,7 +54,7 @@ function isRateLimitError(err: unknown): err is { message: string } {
   return false;
 }
 
-const AITools = ({ blocks, profile }: AIToolsProps) => {
+const AITools = ({ blocks }: AIToolsProps) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<SummaryResult | null>(null);
@@ -63,21 +63,6 @@ const AITools = ({ blocks, profile }: AIToolsProps) => {
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({ minHeight: 48, maxHeight: 164 });
   const pageContent = blocks.map((b) => b.content).join("\n");
   
-  const rateLimits: Record<string, number | null> = { free: 2, pro: 4, creator: null};
-  const tier = profile.subscription_tier ?? "unknown";
-  const limit = rateLimits[tier] ?? 0;
-  const usage = profile.daily_call_count ?? 0;
-
-  const hasRemainingCalls = useCallback(() => {
-    return limit === null || usage < limit;
-  }, [limit, usage]);
-  
-  useEffect(() => {
-    if (!hasRemainingCalls()) {
-      setErrorMessage("You've hit your daily AI limit. Upgrade your plan for more usage.");
-    }
-  }, [hasRemainingCalls]);
-
   const handleSummary = async () => {
     setLoading(true);
     setErrorMessage(null);
@@ -150,7 +135,7 @@ const AITools = ({ blocks, profile }: AIToolsProps) => {
                     sm:bottom-6 sm:right-6"
         onClick={() => setIsOpen(!isOpen)}
         >
-        {isOpen ? <X className="size-5 sm:size-6" /> : <Bot className="size-5 sm:size-6 animate-pulse" />}
+        {isOpen ? <X className="size-6" /> : <Bot className="size-6 animate-pulse" />}
         </button>
         <AnimatePresence>
         {isOpen && (
@@ -208,9 +193,6 @@ const AITools = ({ blocks, profile }: AIToolsProps) => {
                     >
                     <CheckCircle className="size-4 text-primary" /> Actions
                     </button>
-                    <h1 className="text-sm text-muted-foreground ml-auto">
-                      {limit === null ? '' : `${usage}/${limit} AI calls `}
-                    </h1>
                 </div>
 
                 <div className="relative border rounded-2xl bg-neutral-100 dark:bg-neutral-800 p-1">

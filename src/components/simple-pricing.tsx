@@ -109,7 +109,7 @@ export default function SimplePricing({ user, currentPlan } : {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="text-foreground text-3xl font-bold sm:text-5xl"
+            className="text-foreground text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold"
           >
             Pick the perfect plan for your needs
           </motion.h1>
@@ -117,7 +117,7 @@ export default function SimplePricing({ user, currentPlan } : {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="max-w-md pt-2 sm:text-lg text-muted-foreground"
+            className="max-w-md pt-2 text-sm sm:text-base md:text-lg text-muted-foreground"
           >
             Simple, transparent pricing that scales with your business. No
             hidden fees, no surprises.
@@ -157,7 +157,7 @@ export default function SimplePricing({ user, currentPlan } : {
           </Tabs>
         </motion.div>
 
-        <div className="mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 px-4 sm:px-6 md:px-8">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.id}
@@ -165,7 +165,7 @@ export default function SimplePricing({ user, currentPlan } : {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="flex"
+              className="flex h-full"
             >
               <Card
                 className={cn(
