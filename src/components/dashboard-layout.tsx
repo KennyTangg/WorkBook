@@ -18,7 +18,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
   return (
     <SidebarProvider>
       <AppSidebar
-        pages={pages}
+        pages={pages ?? []}
         user={{
           id: user.id,
           name: profile?.username,
