@@ -12,8 +12,9 @@ export async function middleware(request: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
   const pathname = request.nextUrl.pathname;
   const guestOnlyRoutes = ["/" ,"/login", "/register"];
+  const isResetRoute = pathname.startsWith("/reset");
   const hybridRoutes = ["/pricing","/reset", "/auth/callback", "/api/checkout", "/api/webhook", "/api/cancel-subscription"]; 
-  const isGuestOnly = guestOnlyRoutes.includes(pathname);
+  const isGuestOnly = guestOnlyRoutes.includes(pathname) || isResetRoute;
   const isHybrid = hybridRoutes.includes(pathname);
   
   // if (!session && request.cookies.has("sb:token")) {

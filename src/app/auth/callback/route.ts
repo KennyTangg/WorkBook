@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   console.log('[Callback] Will redirect to next:', next)
 
   if (code) {
-    const supabase = await createClient()
+    const supabase = createClient()
 
     // ✅ Add clear logging for debugging
     const { error, data } = await supabase.auth.exchangeCodeForSession(code)

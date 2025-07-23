@@ -13,10 +13,12 @@ import { ArrowLeft } from "lucide-react";
 import { useAuthToast } from "@/utils/helpers";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isResetting, setIsResetting] = useState(false);
     const router = useRouter();
     const { error: showError, success: showSuccess, info: showInfo } = useAuthToast();
     
@@ -41,18 +43,23 @@ const LoginPage = () => {
     };
 
     const handleForgotPassword = async () => {
-        if (!email) {
-            showError("Please enter your email first.");
-            return;
-        }
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/reset`
-        });
-        if (error) {
-            showError(error.message);
-        } else {
-            showSuccess("Password reset email sent! Check your inbox.");
-        }
+    if (!email.trim()) {
+        toast.error("Please enter your email.");
+        return;
+    }
+    
+    setIsResetting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset`,
+    });
+    setIsResetting(false);
+    
+    if (error) {
+        console.error("Reset error:", error.message);
+        return showError(error.message);
+    }
+
+    showSuccess("Password reset email sent. Check your inbox.");
     };
 
   return (
@@ -104,10 +111,11 @@ const LoginPage = () => {
                                 <div className="grid gap-2 sm:gap-4">
                                 <div className="flex items-center">
                                     <Label htmlFor="password" className="sm:text-md" >Password</Label>
-                                    <a onClick={handleForgotPassword}
+                                    <a
+                                    onClick={handleForgotPassword}
                                     className="text-sm ml-auto inline-block underline-offset-4 hover:underline hover:cursor-pointer"
                                     >
-                                    Forgot your password?
+                                    {isResetting ? "Processing..." : "Forgot your password?"}
                                     </a>
                                 </div>
                                 <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />

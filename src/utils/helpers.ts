@@ -12,7 +12,7 @@ export function getFriendlyAuthErrorMessage(errorMessage: string): string {
     return "An account with this email already exists.";
   }
 
-  if (message.includes("email rate limit exceeded")) {
+  if (message.includes("email rate limit exceeded") || message.includes("rate limit")) {
     return "You’ve tried too many times. Please wait a moment and try again.";
   }
 
@@ -20,24 +20,46 @@ export function getFriendlyAuthErrorMessage(errorMessage: string): string {
     return "Your password is incorrect. Please try again.";
   }
 
-  if (message.includes("invalid email or password")) {
-    return "Email or password is incorrect.";
-  }
-  
   if (message.includes("user not found")) {
     return "No account was found with that email address.";
   }
 
-  if (message.includes("reset token invalid")) {
-    return "Your password reset link is invalid. Please request a new link.";
+  if (
+    message.includes("reset token invalid") ||
+    message.includes("missing reset token") ||
+    message.includes("jwt malformed")
+  ) {
+    return "Your password reset link is invalid. Please request a new one.";
   }
 
-  if (message.includes("reset token expired")) {
+  if (
+    message.includes("reset token expired") ||
+    message.includes("jwt expired") ||
+    message.includes("token has expired")
+  ) {
     return "Your password reset link has expired. Please request a new one.";
+  }
+
+  if (
+    message.includes("missing refresh token") ||
+    message.includes("invalid token") ||
+    message.includes("could not find session") ||
+    message.includes("no active session")
+  ) {
+    return "Your session is invalid or expired. If you opened the link on a different device or browser, please try again from the same device you requested it from.";
+  }
+
+  if (message.includes("new password") && message.includes("should be at least")) {
+    return "Your new password is too short. Please use a longer password.";
+  }
+
+  if (message.includes("password should be at least")) {
+    return "Your password must be longer. Please try a more secure one.";
   }
 
   return "Something went wrong. Please try again.";
 }
+
 
 export function useAuthToast() {
   return {
